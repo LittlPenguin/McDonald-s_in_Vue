@@ -1,6 +1,25 @@
 
+
+@font-face {
+  font-family: "xiaowei";
+  src: url("./assets/fonts/站酷小薇LOGO体.otf");
+}
+
 body {
   margin: 0;
   padding: 0;
+  background-color: hsl(0, 0%, 2%);
   box-sizing: border-box;
+  color: #fff;
+  font-family: "xiaowei";
+}
+
+ul {
+  list-style: none;
+}
+li {
+  list-style: none;
+}
+a {
+  text-decoration: none;
 }

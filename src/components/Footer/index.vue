@@ -1,0 +1,71 @@
+<script lang="ts" setup></script>
+<template>
+  <div class="footer">
+    <div class="bac">Mdonalds</div>
+    <div class="text">
+      <ul>
+        <li>Instagram</li>
+        <li>Twitter</li>
+        <li>Facebook</li>
+      </ul>
+      <span> © 2025 McDonald's Corporation. Designed for the Future.</span>
+    </div>
+  </div>
+</template>
+<style lang="scss" scoped>
+.footer {
+  width: 100%;
+  background-color: #1c1c1c;
+  height: 300px;
+  position: relative;
+  & .bac {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    color: #202020;
+    letter-spacing: -5px;
+    font-size: 17vw;
+    line-height: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    text-transform: uppercase;
+    user-select: none;
+    z-index: 99;
+  }
+  & .text {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    & ul {
+      z-index: 999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      & li {
+        margin: 0 10px;
+        color: #687287;
+        font-size: 28px;
+        cursor: pointer;
+        padding: 5px 10px;
+        transition: all 0.3s ease;
+        &:hover {
+          color: #ffc500;
+          transform: translateY(-5px);
+        }
+      }
+    }
+    & span {
+      margin-top: 20px;
+      font-size: 28px;
+      z-index: 999;
+      color: #364658;
+    }
+  }
+}
+</style>
