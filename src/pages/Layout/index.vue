@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import HeaderCom from "@/components/Header/index.vue";
+import FooterCom from '@/components/Footer/index.vue'
 import { onMounted, watch, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 // 导入Gsap
@@ -36,7 +37,8 @@ onUnmounted(() => {
   <HeaderCom />
   <div id="smooth-wrapper">
     <div id="smooth-content">
-      <RouterView style="margin-top: 150px" />
+      <RouterView />
+      <FooterCom />
     </div>
   </div>
 </template>

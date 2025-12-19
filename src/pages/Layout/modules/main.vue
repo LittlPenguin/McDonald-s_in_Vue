@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import AniMationText from "@/components/AnimationText/index.vue";
-import FooterCom from "@/components/Footer/index.vue";
 import pgscscnb from "@/assets/images/培根蔬萃双层牛堡.png";
 import shutiao from "@/assets/images/薯条.png";
 import coke from "@/assets/images/可乐.png";
@@ -68,7 +67,7 @@ onMounted(() => {
 });
 </script>
 <template>
-  <div class="LayoutMain">
+  <div class="LayoutMain" style="margin-top: 150px">
     <div class="banner">
       <div class="title" ref="LayoutMainSplit">
         <span class="left">BIG</span>
@@ -150,7 +149,6 @@ onMounted(() => {
       style="margin-bottom: 0"
     />
   </div>
-  <FooterCom />
 </template>
 
 <style lang="scss" scoped>
@@ -166,7 +164,6 @@ onMounted(() => {
       font-size: 17vw;
       letter-spacing: -2vw;
       user-select: none;
-      padding-top: 150px;
 
       & .left {
         font-weight: 800;

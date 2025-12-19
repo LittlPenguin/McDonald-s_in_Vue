@@ -27,18 +27,20 @@ const goHref = (href: SocialPlatform) => {
 .footer {
   width: 100%;
   background-color: #1c1c1c;
-  height: 300px;
+  height: 400px;
   position: relative;
+  padding-bottom: 100px;
   & .bac {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 35%;
+    transform: translate(-50%);
+    left: 50%;
     position: absolute;
     color: #202020;
-    letter-spacing: -5px;
-    font-size: 17vw;
-    line-height: 1;
+    letter-spacing: -20px;
+    font-family: "微软雅黑";
+    font-weight: 800;
+    font-size: 16vw;
+    line-height: 0;
     display: flex;
     justify-content: center;
     align-items: flex-end;

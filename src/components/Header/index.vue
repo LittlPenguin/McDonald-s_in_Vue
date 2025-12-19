@@ -1,6 +1,18 @@
 <script setup lang="ts">
-import { useRouter } from "vue-router";
+import { watch, ref } from "vue";
+import { useRouter, useRoute } from "vue-router";
 const router = useRouter();
+const route = useRoute();
+
+//判断路径变化
+const routePath = ref(route.path);
+watch(
+  () => route.path,
+  (newpath) => {
+    routePath.value = newpath;
+  },
+  { deep: true }
+);
 </script>
 <template>
   <div class="HeaderCom">
@@ -11,10 +23,30 @@ const router = useRouter();
 
     <div>
       <ul class="HeaderCom_middle">
-        <li @click="router.push('/menu')">Menu</li>
-        <li @click="router.push('/offers')">Offers</li>
-        <li @click="router.push('/trending')">Trending</li>
-        <li @click="router.push('/stores')">Stores</li>
+        <li
+          :class="{ active: routePath === '/menu' }"
+          @click="router.push('/menu')"
+        >
+          Menu
+        </li>
+        <li
+          :class="{ active: routePath === '/offers' }"
+          @click="router.push('/offers')"
+        >
+          Offers
+        </li>
+        <li
+          :class="{ active: routePath === '/trending' }"
+          @click="router.push('/trending')"
+        >
+          Trending
+        </li>
+        <li
+          :class="{ active: routePath === '/stores' }"
+          @click="router.push('/stores')"
+        >
+          Stores
+        </li>
       </ul>
     </div>
     <div class="HeaderCom_right">
@@ -99,8 +131,13 @@ const router = useRouter();
         color: #ffc000;
         align-items: flex-start;
       }
-
       &:hover::after {
+        width: 100%;
+      }
+      &.active {
+        color: #ffc000;
+      }
+      &.active::after {
         width: 100%;
       }
     }
