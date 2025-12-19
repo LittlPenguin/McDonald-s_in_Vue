@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import "@/style.scss";
+import "@/assets/icons/iconfont.css";
 // 导入Pinia
 import pinia from "@/Store/index";
 

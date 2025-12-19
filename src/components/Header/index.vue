@@ -1,22 +1,24 @@
 <script setup lang="ts">
-import "@/assets/icons/iconfont.css";
+import { useRouter } from "vue-router";
+const router = useRouter();
 </script>
 <template>
   <div class="HeaderCom">
-    <div class="HeaderCom_left">
+    <div class="HeaderCom_left" @click="router.push('/')">
       <v-icon class="iconfont icon-M headerM" size="x-large"></v-icon>
       <span>Est. 1955</span>
     </div>
+
     <div>
       <ul class="HeaderCom_middle">
-        <li>Menu</li>
-        <li>Offers</li>
-        <li>Trending</li>
-        <li>Stores</li>
+        <li @click="router.push('/menu')">Menu</li>
+        <li @click="router.push('/offers')">Offers</li>
+        <li @click="router.push('/trending')">Trending</li>
+        <li @click="router.push('/stores')">Stores</li>
       </ul>
     </div>
     <div class="HeaderCom_right">
-      <span class="HeaderCom_right_span">My Tray</span>
+      <span class="HeaderCom_ right_span">My Tray</span>
       <v-icon
         class="iconfont icon-shopping headerShopping"
         size="large"
@@ -38,6 +40,7 @@ import "@/assets/icons/iconfont.css";
   justify-content: space-between;
   align-items: center;
   font-weight: bolder;
+  background-color: transparent;
 
   & .HeaderCom_left {
     font-size: 19px;
@@ -59,6 +62,7 @@ import "@/assets/icons/iconfont.css";
     }
   }
   & .HeaderCom_middle {
+    user-select: none;
     width: 451px;
     display: flex;
     justify-content: space-around;
@@ -89,7 +93,7 @@ import "@/assets/icons/iconfont.css";
         width: 0%;
         height: 2px;
         background-color: #ffc000;
-        transition: all 0.5s ease;
+        transition: all 0.3s ease;
       }
       &:hover {
         color: #ffc000;
@@ -100,11 +104,10 @@ import "@/assets/icons/iconfont.css";
         width: 100%;
       }
     }
-    @media screen and (max-width:760px) {
+    @media screen and (max-width: 760px) {
       & {
         display: none;
       }
-      
     }
   }
   & .HeaderCom_right {

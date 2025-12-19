@@ -146,7 +146,9 @@ onMounted(() => {
   <div class="AnimationText" style="user-select: none">
     <div class="scrolling-text">
       <div class="rail">
-        <h4 v-for="value in 3">{{ props.text }}</h4>
+        <h4 v-for="value in 5" :key="(value += props.text)">
+          {{ props.text }}
+        </h4>
       </div>
     </div>
   </div>

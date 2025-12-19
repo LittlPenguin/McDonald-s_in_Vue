@@ -1,26 +1,91 @@
 <script setup lang="ts">
 import AniMationText from "@/components/AnimationText/index.vue";
-import Footer from "@/components/Footer/index.vue";
+import FooterCom from "@/components/Footer/index.vue";
 import pgscscnb from "@/assets/images/培根蔬萃双层牛堡.png";
 import shutiao from "@/assets/images/薯条.png";
 import coke from "@/assets/images/可乐.png";
 import cofe1 from "@/assets/images/cofe1.jpg";
+
+import { onMounted, ref } from "vue";
+
+// 路由跳转
+import { useRouter } from "vue-router";
+const router = useRouter();
+
+//导入Gsap
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
+import { SplitText } from "gsap/SplitText";
+gsap.registerPlugin(SplitText, ScrollTrigger);
+
+const LayoutMainSplit = ref(null);
+const t1 = ref<HTMLElement[]>([]);
+const introduce = ref(null);
+const whatHot = ref<HTMLElement[]>([]);
+onMounted(() => {
+  // 布局主模块的标题文本
+  gsap.from(SplitText.create(LayoutMainSplit.value, { type: "chars" }).chars, {
+    duration: 1.2,
+    y: 150, //偏移量
+    autoAlpha: 0, // 从透明度0开始显示
+    stagger: 0.1, // 每个字符之间的延迟时间
+  });
+  //时间线处理首页的标题文本和按钮动画
+  const timeLine = gsap.timeline();
+  t1.value.forEach((el) => {
+    timeLine.from(el, { autoAlpha: 0, duration: 1, y: 20 }, "<.7");
+  });
+  //introduce动画
+  gsap.to(introduce.value, {
+    scrollTrigger: {
+      trigger: introduce.value,
+      start: "top center+=200",
+    },
+    duration: 1.5,
+    opacity: 1,
+  });
+  //whatHot
+  const whatHotTimeLine = gsap.timeline();
+  whatHot.value.forEach((el) => {
+    whatHotTimeLine.from(
+      SplitText.create(el, { type: "chars" }).chars,
+      {
+        scrollTrigger: {
+          trigger: ".whatHot",
+          start: "top center+=200",
+          end: "top center",
+          scrub: 1,
+        },
+        duration: 0.5,
+        y: 150, //偏移量
+        autoAlpha: 0, // 从透明度0开始显示
+        stagger: 0.05, // 每个字符之间的延迟时间
+      },
+      0.5
+    );
+  });
+});
 </script>
 <template>
   <div class="LayoutMain">
     <div class="banner">
-      <div class="title">
+      <div class="title" ref="LayoutMainSplit">
         <span class="left">BIG</span>
         <span class="right">MAG </span>
       </div>
-      <span class="subtitle">The Original. Since 1968.</span>
-      <div class="goMenu">
-        <v-btn class="goMenuBtn"> Start order </v-btn>
+      <span class="subtitle" :ref="(el:any) => t1.push(el)"
+        >The Original. Since 1968.</span
+      >
+      <div class="goMenu" :ref="(el:any) => t1.push(el)">
+        <v-btn class="goMenuBtn" @click="router.push('/menu')">
+          Start order
+        </v-btn>
       </div>
     </div>
     <AniMationText text="FRESH • HOT • CRISPY • JUICY" />
-    <div class="introduce">
-      <div class="left">
+    <div class="introduce" ref="introduce" style="opacity: 0">
+      <div class="left" @click="router.push('/menu')">
         <img :src="pgscscnb" alt="" />
         <div class="card">
           <span class="title">Category 01</span>
@@ -29,7 +94,7 @@ import cofe1 from "@/assets/images/cofe1.jpg";
         </div>
       </div>
       <div class="right">
-        <div class="top">
+        <div class="top" @click="router.push('/menu')">
           <img :src="shutiao" class="rightImg" alt="" />
           <div class="card">
             <span class="title">Category 02</span>
@@ -37,7 +102,7 @@ import cofe1 from "@/assets/images/cofe1.jpg";
             <span class="smallSubTitle">perfect foods</span>
           </div>
         </div>
-        <div class="bottom">
+        <div class="bottom" @click="router.push('/menu')">
           <img :src="coke" class="rightImg" alt="" />
           <div class="card">
             <span class="title">Category 03</span>
@@ -50,11 +115,13 @@ import cofe1 from "@/assets/images/cofe1.jpg";
     <div class="whatHot">
       <div class="title">
         <div class="left">
-          <div class="title">What's Hot Now</div>
-          <div class="subTitle">Trending</div>
-          <div class="subTitleT">Drops</div>
+          <div class="title" :ref="(el:any)=>whatHot.push(el)">
+            What's Hot Now
+          </div>
+          <div class="subTitle" :ref="(el:any)=>whatHot.push(el)">Trending</div>
+          <div class="subTitleT" :ref="(el:any)=>whatHot.push(el)">Drops</div>
         </div>
-        <div class="right">
+        <div class="right" @click="router.push('/trending')">
           <span> Explore All </span>
           <v-icon
             size="x-small"
@@ -79,11 +146,11 @@ import cofe1 from "@/assets/images/cofe1.jpg";
       </div>
     </div>
     <AniMationText
-      text="ORDER ONLINE • SKIP THE LINE • EARN REWARDS"
+      text="FRESH • HOT • CRISPY • JUICY"
       style="margin-bottom: 0"
     />
-    <Footer />
   </div>
+  <FooterCom />
 </template>
 
 <style lang="scss" scoped>
@@ -99,6 +166,7 @@ import cofe1 from "@/assets/images/cofe1.jpg";
       font-size: 17vw;
       letter-spacing: -2vw;
       user-select: none;
+      padding-top: 150px;
 
       & .left {
         font-weight: 800;
@@ -366,6 +434,7 @@ import cofe1 from "@/assets/images/cofe1.jpg";
             font-family: "微软雅黑";
             font-weight: 800;
             margin-top: 20px;
+            transition: all 0.3s ease;
           }
           & .subTitle {
             display: flex;
@@ -393,6 +462,9 @@ import cofe1 from "@/assets/images/cofe1.jpg";
             & {
               height: 65vw;
             }
+          }
+          &:hover .title {
+            color: #ffc500;
           }
         }
       }

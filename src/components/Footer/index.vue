@@ -1,12 +1,23 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+type SocialPlatform = "Instagram" | "Twitter" | "Facebook";
+const HrefMaps: Record<SocialPlatform, string> = {
+  Instagram: "https://www.instagram.com/mcdonalds/",
+  Twitter: "https://twitter.com/mcdonalds",
+  Facebook: "https://www.facebook.com/mcdonalds",
+};
+// 跳转
+const goHref = (href: SocialPlatform) => {
+  window.location.href = HrefMaps[href];
+};
+</script>
 <template>
   <div class="footer">
     <div class="bac">Mdonalds</div>
     <div class="text">
       <ul>
-        <li>Instagram</li>
-        <li>Twitter</li>
-        <li>Facebook</li>
+        <li @click="goHref('Instagram')">Instagram</li>
+        <li @click="goHref('Twitter')">Twitter</li>
+        <li @click="goHref('Facebook')">Facebook</li>
       </ul>
       <span> © 2025 McDonald's Corporation. Designed for the Future.</span>
     </div>
