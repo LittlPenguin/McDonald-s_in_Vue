@@ -14,7 +14,6 @@ const router = useRouter();
 //导入Gsap
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-gsap.registerPlugin(ScrollTrigger);
 import { SplitText } from "gsap/SplitText";
 gsap.registerPlugin(SplitText, ScrollTrigger);
 

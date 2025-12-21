@@ -1,8 +1,8 @@
 @font-face {
   font-family: "iconfont"; /* Project id 5091456 */
-  src: url('iconfont.woff2?t=1766044866714') format('woff2'),
-       url('iconfont.woff?t=1766044866714') format('woff'),
-       url('iconfont.ttf?t=1766044866714') format('truetype');
+  src: url('iconfont.woff2?t=1766296825931') format('woff2'),
+       url('iconfont.woff?t=1766296825931') format('woff'),
+       url('iconfont.ttf?t=1766296825931') format('truetype');
 }
 
 .iconfont {
@@ -11,6 +11,10 @@
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-erweima:before {
+  content: "\e642";
 }
 
 .icon-cc-arrow-right:before {

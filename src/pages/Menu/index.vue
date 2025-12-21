@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
+import { onMounted, ref } from "vue";
 import byorder from "@/assets/Images/byorder.jpg";
+//导入Gsap
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+gsap.registerPlugin(ScrollTrigger);
 
 // 选择分类小类
 const listMaps = ref(["汉堡", "小食", "甜品", "饮品", "早餐"]);
@@ -23,6 +26,45 @@ const selectCategoryAll = () => {
   });
   selectCategoryAllRefs.value?.classList.add("active");
 };
+
+// 动画区域
+const MenuMainLiRefs = ref<HTMLElement[]>([]);
+const lineItemCount = ref<number[]>([]);
+onMounted(() => {
+  // 为每个元素单独创建 ScrollTrigger
+  let lineItemCountB = 0;
+  let lineItemCountA = 0;
+
+  MenuMainLiRefs.value.forEach(async (item, index) => {
+    if (lineItemCountA === item.offsetTop || lineItemCountA === 0) {
+      lineItemCountB++;
+      lineItemCountA = item.offsetTop;
+    } else {
+      lineItemCount.value.push(lineItemCountB);
+      lineItemCountA = item.offsetTop;
+      lineItemCountB = 0;
+    }
+    // 先隐藏所有元素
+    gsap.set(item, { autoAlpha: 0, y: 100 });
+    // 为每个元素创建独立的 ScrollTrigger
+    await ScrollTrigger.create({
+      trigger: item,
+      once: true,
+      onEnter: () => {
+        // 当元素进入视口时，延时执行动画
+        gsap.to(item, {
+          ease: "back.inOut(1.7)",
+          autoAlpha: 1,
+          duration: 1,
+          y: 0,
+          delay: lineItemCount.value[0]
+            ? (index % lineItemCount.value[0]!) * 0.1
+            : index * 0.1,
+        });
+      },
+    });
+  });
+});
 </script>
 <template>
   <div class="Menu">
@@ -48,7 +90,10 @@ const selectCategoryAll = () => {
     </div>
     <div class="main">
       <ul>
-        <li v-for="value in 10">
+        <li
+          v-for="value in 10"
+          :ref="(el)=>MenuMainLiRefs.push(el as HTMLElement)"
+        >
           <div class="pic">
             <img :src="byorder" alt="" />
           </div>
