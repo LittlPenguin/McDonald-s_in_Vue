@@ -20,6 +20,7 @@ gsap.registerPlugin(SplitText, ScrollTrigger);
 
 const LayoutMainSplit = ref(null);
 const t1 = ref<HTMLElement[]>([]);
+const LayoutMainBanner = ref();
 const introduce = ref(null);
 const whatHot = ref<HTMLElement[]>([]);
 onMounted(() => {
@@ -34,6 +35,16 @@ onMounted(() => {
   const timeLine = gsap.timeline();
   t1.value.forEach((el) => {
     timeLine.from(el, { autoAlpha: 0, duration: 1, y: 20 }, "<.7");
+  });
+  // 处理首页的banner动画
+  gsap.to(LayoutMainBanner.value, {
+    scrollTrigger: {
+      trigger: LayoutMainBanner.value,
+      start: "bottom-=100 center+=100",
+      end: "center center-=200",
+      scrub: 1,
+    },
+    scale: 0.85,
   });
   //introduce动画
   gsap.to(introduce.value, {
@@ -68,7 +79,7 @@ onMounted(() => {
 </script>
 <template>
   <div class="LayoutMain" style="margin-top: 150px">
-    <div class="banner">
+    <div class="banner" ref="LayoutMainBanner">
       <div class="title" ref="LayoutMainSplit">
         <span class="left">BIG</span>
         <span class="right">MAG </span>
