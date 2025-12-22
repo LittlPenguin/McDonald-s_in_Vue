@@ -36,20 +36,14 @@ watch(
           Offers
         </li>
         <li
-          :class="{ active: routePath === '/trending' }"
-          @click="router.push('/trending')"
+          :class="{ active: routePath === '/car' }"
+          @click="router.push('/car')"
         >
-          Trending
-        </li>
-        <li
-          :class="{ active: routePath === '/stores' }"
-          @click="router.push('/stores')"
-        >
-          Stores
+          OrderCar
         </li>
       </ul>
     </div>
-    <div class="HeaderCom_right">
+    <div class="HeaderCom_right" @click="router.push('/car')">
       <span class="HeaderCom_ right_span">My Tray</span>
       <v-icon
         class="iconfont icon-shopping headerShopping"

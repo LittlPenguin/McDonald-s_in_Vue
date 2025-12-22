@@ -10,6 +10,7 @@ const liIndexLeft = (index: number) => {
 
 // 列表项动画引用
 const TrendingLiAniMationRefs = ref<HTMLElement[]>([]);
+const TotalOrder = ref();
 onMounted(() => {
   TrendingLiAniMationRefs.value.forEach((item) => {
     gsap.from(item, {
@@ -23,10 +24,17 @@ onMounted(() => {
       ease: "back.inOut(1.7)",
     });
   });
+  gsap.from(TotalOrder.value, {
+    x: 100,
+    autoAlpha: 0,
+    duration: 0.8,
+    delay: 0.3,
+    ease: "back.inOut(1.7)",
+  });
 });
 </script>
 <template>
-  <div class="Trending">
+  <div class="Trending" ref="CardOrder">
     <div class="header">
       <div class="left">
         <div class="one">
@@ -66,6 +74,24 @@ onMounted(() => {
           </div>
         </li>
       </ul>
+      <div class="order" ref="TotalOrder">
+        <div class="title">Summary</div>
+        <div class="Subtotal">
+          <div class="top">
+            <span>Subtotal</span>
+            <span>$5.99</span>
+          </div>
+          <div class="bottom">
+            <span>Tax (8%)</span>
+            <span>$0.48</span>
+          </div>
+        </div>
+        <div class="total">
+          <span>Total</span>
+          <span class="totalPrice">$6.47</span>
+        </div>
+        <div class="checkout">Checkout</div>
+      </div>
     </div>
   </div>
 </template>
@@ -73,6 +99,7 @@ onMounted(() => {
 <style lang="scss" scoped>
 .Trending {
   margin-top: 120px;
+  position: relative;
   & > .header {
     display: flex;
     justify-content: space-between;
@@ -120,8 +147,9 @@ onMounted(() => {
     }
   }
   & > .main {
+    display: flex;
     & ul {
-      width: 100%;
+      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -220,6 +248,91 @@ onMounted(() => {
               }
             }
           }
+        }
+      }
+    }
+    & .order {
+      margin-left: 30px;
+      margin-top: 70px;
+      background: linear-gradient(
+        45deg,
+        #ffc0001a 0%,
+        #ffc0000d 30%,
+        #ffc00000 70%,
+        #7b100015 100%
+      );
+      margin-right: 120px;
+      &::selection {
+        background-color: #ffc500;
+        color: #000;
+      }
+      width: 20vw;
+      height: 25vw;
+      background-color: #121212;
+      padding: 10px;
+      border-radius: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      & .title {
+        width: 100%;
+        font-size: 22px;
+        color: #fff;
+        font-family: "微软雅黑";
+        flex: 1;
+        padding-left: 10px;
+        display: flex;
+        align-items: center;
+        font-weight: bolder;
+      }
+      & .Subtotal {
+        width: 100%;
+        color: #c0c6cf;
+        font-size: 18px;
+        flex: 1;
+        border-bottom: 1px solid #3a3a3a;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        padding: 0 5px;
+        & > div {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+      }
+      & .total {
+        width: 100%;
+        font-size: 24px;
+        flex: 1;
+        padding: 0 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        & .totalPrice {
+          color: #ffc500;
+        }
+      }
+      & .checkout {
+        flex: 1;
+        width: 80%;
+        background-color: #ffc500;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #000;
+        font-weight: bolder;
+        font-size: 26px;
+        line-height: 1;
+        cursor: pointer;
+        font-family: "微软雅黑";
+        border-radius: 15px;
+        transition: all 0.3s ease-out;
+        user-select: none;
+        &:hover {
+          background-color: #fff;
         }
       }
     }
