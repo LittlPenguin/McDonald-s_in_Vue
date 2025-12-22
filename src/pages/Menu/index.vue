@@ -31,11 +31,11 @@ const selectCategoryAll = () => {
 const MenuMainLiRefs = ref<HTMLElement[]>([]);
 const lineItemCount = ref<number[]>([]);
 onMounted(() => {
-  // 为每个元素单独创建 ScrollTrigger
   let lineItemCountB = 0;
   let lineItemCountA = 0;
-
-  MenuMainLiRefs.value.forEach(async (item, index) => {
+  MenuMainLiRefs.value.forEach((item, index) => {
+    // 为每个元素单独创建 ScrollTrigger
+    // 判断一行有多少个
     if (lineItemCountA === item.offsetTop || lineItemCountA === 0) {
       lineItemCountB++;
       lineItemCountA = item.offsetTop;
@@ -47,7 +47,7 @@ onMounted(() => {
     // 先隐藏所有元素
     gsap.set(item, { autoAlpha: 0, y: 100 });
     // 为每个元素创建独立的 ScrollTrigger
-    await ScrollTrigger.create({
+    ScrollTrigger.create({
       trigger: item,
       once: true,
       onEnter: () => {

@@ -174,7 +174,24 @@ onMounted(() => {
       font-size: 17vw;
       letter-spacing: -2vw;
       user-select: none;
-
+      position: relative;
+      &::after {
+        content: "";
+        z-index: -1;
+        position: absolute;
+        width: 50vw;
+        height: 50vw;
+        border-radius: 10000px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: radial-gradient(
+          circle,
+          rgba(255, 192, 0, 0.1) 0%,
+          rgba(255, 192, 0, 0.05) 30%,
+          rgba(255, 192, 0, 0) 70%
+        );
+      }
       & .left {
         font-weight: 800;
         letter-spacing: -4vw;
