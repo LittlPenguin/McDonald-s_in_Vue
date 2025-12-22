@@ -1,0 +1,148 @@
+<script lang="ts" setup></script>
+<template>
+  <div class="Buy">
+    <div class="left"></div>
+    <div class="right">
+      <div class="header">
+        <v-icon class="iconfont icon-cc-arrow-left"></v-icon>
+
+        Back to Menu
+      </div>
+      <div class="goodsCate">Burgers</div>
+      <div class="goodsName">Quarter Pounder</div>
+      <div class="goodsDes">
+        A quarter pound of 100% fresh beef that’s hot, deliciously juicy and
+        cooked when you order.
+      </div>
+      <div class="goodsPri">
+        <div class="left">
+          <div class="top">Price</div>
+          <div class="bottom">$6.49</div>
+        </div>
+        <div class="right">
+          <div class="top">Calories</div>
+          <div class="bottom">520</div>
+        </div>
+      </div>
+      <div class="add">
+        <v-icon class="iconfont icon-plus"></v-icon>
+        Add to Order
+      </div>
+    </div>
+  </div>
+</template>
+
+<style lang="scss" scoped>
+.Buy {
+  margin-bottom: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 130px;
+  height: 35vw;
+  width: 100%;
+  gap: 80px;
+  & .left {
+    width: 35%;
+    height: 100%;
+    border-radius: 15px;
+    background-color: palegoldenrod;
+    height: 100%;
+  }
+  & .right {
+    height: 100%;
+    width: 40%;
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    justify-content: center;
+    &::selection {
+      color: #000;
+      background-color: #ffc500;
+    }
+    & .header {
+      color: #5e6781;
+      font-size: 18px;
+      margin-bottom: 30px;
+      transition: all 0.3s ease-out;
+      cursor: pointer;
+      padding: 10px;
+      &:hover {
+        color: #fff;
+      }
+    }
+    & .goodsCate {
+      color: #ff1102;
+      font-family: "微软雅黑";
+      font-size: 18px;
+      text-transform: uppercase;
+      font-weight: bolder;
+      letter-spacing: 1px;
+    }
+    & .goodsName {
+      line-height: 1;
+      padding-bottom: 20px;
+      font-size: 55px;
+    }
+    & .goodsDes {
+      font-size: 24px;
+      padding-left: 20px;
+      line-height: 1;
+      border-left: 2px solid #ffcd11;
+    }
+    & .goodsPri {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      & .left,
+      .right {
+        padding: 10px 0;
+        border-radius: 10px;
+        margin: 0 5px;
+        background-color: #121212;
+        flex: 1;
+        line-height: 1;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        flex-direction: column;
+        & .top {
+          color: #687287;
+          font-size: 18px;
+          padding-left: 15px;
+        }
+        & .bottom {
+          color: #fff;
+          font-size: 30px;
+          padding-left: 15px;
+        }
+      }
+    }
+    & .add {
+      margin-top: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #000;
+      font-size: 2vw;
+      cursor: pointer;
+      border-radius: 15px;
+      transition: all 0.3s ease-in-out;
+      padding: 5px;
+      text-transform: uppercase;
+      background-color: #ffc500;
+      &:hover {
+        background-color: #fff;
+      }
+    }
+  }
+}
+.icon-cc-arrow-left,
+.icon-plus {
+  padding: 10px;
+  font-size: 2px;
+}
+</style>
