@@ -27,26 +27,35 @@ watch(
           :class="{ active: routePath === '/menu' }"
           @click="router.push('/menu')"
         >
-          Menu
+          <div class="span">
+            Menu
+            <v-icon class="iconfont icon-menu" icon="$vuetify"></v-icon>
+          </div>
         </li>
         <li
           :class="{ active: routePath === '/offers' }"
           @click="router.push('/offers')"
         >
-          Offers
+          <div class="span">
+            Offers
+            <v-icon class="iconfont icon-youhui" icon="$vuetify"></v-icon>
+          </div>
         </li>
         <li
           :class="{ active: routePath === '/car' }"
           @click="router.push('/car')"
         >
-          OrderCar
+          <div class="span">
+            OrderCar
+            <v-icon class="iconfont icon-shopping" icon="$vuetify"></v-icon>
+          </div>
         </li>
       </ul>
     </div>
-    <div class="HeaderCom_right" @click="router.push('/car')">
+    <div class="HeaderCom_right" @click="router.push('/login')">
       <span class="HeaderCom_ right_span">My Tray</span>
       <v-icon
-        class="iconfont icon-shopping headerShopping"
+        class="iconfont icon-renwu-ren headerShopping"
         size="large"
       ></v-icon>
     </div>
@@ -67,6 +76,7 @@ watch(
   align-items: center;
   font-weight: bolder;
   background-color: transparent;
+  user-select: none;
 
   & .HeaderCom_left {
     font-size: 19px;
@@ -110,10 +120,20 @@ watch(
       mix-blend-mode: difference;
       font-weight: 800;
       text-transform: uppercase;
-      display: flex;
       flex-direction: column;
+      display: flex;
       align-items: flex-end;
       line-height: 1.1;
+      & .span {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        & .iconfont {
+          margin: 0 5px;
+          font-size: 24px;
+          transition: all 0.3s ease-in-out;
+        }
+      }
       &::after {
         content: "";
         width: 0%;
@@ -124,6 +144,9 @@ watch(
       &:hover {
         color: #ffc000;
         align-items: flex-start;
+        & .iconfont {
+          transform: translateY(-2px) scale(1.1);
+        }
       }
       &:hover::after {
         width: 100%;

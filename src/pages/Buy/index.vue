@@ -24,7 +24,7 @@
           <div class="bottom">520</div>
         </div>
       </div>
-      <div class="add">
+      <div class="add" style="user-select: none;">
         <v-icon class="iconfont icon-plus"></v-icon>
         Add to Order
       </div>

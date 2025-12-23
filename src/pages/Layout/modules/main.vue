@@ -130,7 +130,7 @@ onMounted(() => {
           <div class="subTitle" :ref="(el:any)=>whatHot.push(el)">Trending</div>
           <div class="subTitleT" :ref="(el:any)=>whatHot.push(el)">Drops</div>
         </div>
-        <div class="right" @click="router.push('/trending')">
+        <div class="right" @click="router.push('/offers')">
           <span> Explore All </span>
           <v-icon
             size="x-small"

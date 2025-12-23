@@ -6,6 +6,7 @@ import Menu from "@/pages/Menu/index.vue";
 import Offers from "@/pages/Offers/index.vue";
 import car from "@/pages/Car/index.vue";
 import Buy from "@/pages/Buy/index.vue";
+import Login from "@/pages/Login/index.vue";
 
 const routes = [
   {
@@ -17,6 +18,7 @@ const routes = [
       { path: "/offers", component: Offers },
       { path: "/car", component: car },
       { path: "/buy/:goodsId", component: Buy },
+      { path: "/login", component: Login },
     ],
   },
 ];
