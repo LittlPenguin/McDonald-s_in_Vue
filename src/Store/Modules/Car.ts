@@ -1,16 +1,17 @@
-import { defineStore } from "pinia";
 import { ref } from "vue";
+import { defineStore } from "pinia";
 import { addCarAPI } from "@/API/Modules/car";
 export const useCarStore = defineStore(
   "CarStore",
   () => {
-    const goodsList = ref([]);
-
+    const total = ref("");
+    // 购物车列表
     const addCar = async (goods_id: string, user_email: string) => {
-      const res = await addCarAPI({ goods_id, user_email });
-      console.log(res);
+      const { data: res } = await addCarAPI({ goods_id, user_email });
+      total.value = res.data.total;
+      return res;
     };
-    return { goodsList, addCar };
+    return { total, addCar };
   },
   {
     persist: true,

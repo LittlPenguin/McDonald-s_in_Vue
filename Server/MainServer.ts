@@ -130,9 +130,14 @@ app.post("/car", async (req, res) => {
         "update  mcdonalds_user_purchase set buy_quantity = buy_quantity + 1 where goods_id = ? and user_email = ?";
       (await queryDatabase(sql, [goods_id, user_email])) as any[];
     }
+    let totalSelect =
+      "select sum(buy_quantity) as total from mcdonalds_user_purchase WHERE user_email= ? GROUP BY  user_email";
+    const total = (await queryDatabase(totalSelect, [user_email])) as any[];
+
     res.status(200).json({
       code: 200,
       message: "加入购物车成功",
+      data: total[0],
     });
   } catch (error) {
     console.error("加入购物车失败:", error);

@@ -11,6 +11,11 @@ const route = useRoute();
 import { useCarStore, useAccountStore } from "@/Store/index.ts";
 const carStore = useCarStore();
 const accountStore = useAccountStore();
+
+const snackbar = ref(false);
+const snackbarText = ref("你好");
+const snackbarColorMap = ["green-darken-4", "red-darken-4"];
+const snackbarColor = ref(snackbarColorMap[0]);
 // 获取商品参数
 const goodsId = ref("");
 // 获取商品详情
@@ -21,6 +26,21 @@ const getGoodsDetail = async () => {
   } = await getGoodsDetailAPI({ goods_id: goodsId.value });
   goodsDetails.value = data;
 };
+
+// 添加购物车方法
+const addCarsMethods = async () => {
+  const res = await carStore.addCar(
+    goodsDetails.value.goods_id,
+    accountStore.Email
+  );
+  if (res.code === 200) {
+    snackbarColor.value = snackbarColorMap[0];
+  } else {
+    snackbarColor.value = snackbarColorMap[1];
+  }
+  snackbar.value = true;
+  snackbarText.value = res.message;
+};
 onMounted(async () => {
   goodsId.value = route.params.goodsId;
   await getGoodsDetail();
@@ -28,6 +48,21 @@ onMounted(async () => {
 </script>
 <template>
   <div class="Buy">
+    <v-snackbar
+      style="top: 100px"
+      location="top"
+      color="green-darken-4"
+      variant="tonal"
+      v-model="snackbar"
+      timeout="1000"
+    >
+      {{ snackbarText }}
+      <template v-slot:actions>
+        <v-btn color="green-darken-4" variant="tonal" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <div class="left">
       <img :src="getImagePath(goodsDetails?.img_url || '')" alt="" />
     </div>
@@ -51,11 +86,7 @@ onMounted(async () => {
           <div class="bottom">{{ goodsDetails?.calorie }}</div>
         </div>
       </div>
-      <div
-        class="add"
-        style="user-select: none"
-        @click="carStore.addCar(goodsDetails.goods_id, accountStore.Email)"
-      >
+      <div class="add" style="user-select: none" @click="addCarsMethods">
         <v-icon class="iconfont icon-plus"></v-icon>
         Add to Order
       </div>

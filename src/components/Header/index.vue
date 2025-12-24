@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { watch, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import { useAccountStore } from "@/Store/index.ts";
+import { useAccountStore, useCarStore } from "@/Store/index.ts";
 const accountStore = useAccountStore();
-
+const carStore = useCarStore();
 const router = useRouter();
 const route = useRoute();
 
@@ -49,8 +49,14 @@ watch(
           @click="router.push('/car')"
         >
           <div class="span">
-            OrderCar
-            <v-icon class="iconfont icon-shopping" icon="$vuetify"></v-icon>
+            <v-badge
+              location="top right"
+              color="warning"
+              :content="carStore.total"
+            >
+              OrderCar
+              <v-icon class="iconfont icon-shopping" icon="$vuetify"></v-icon>
+            </v-badge>
           </div>
         </li>
       </ul>
