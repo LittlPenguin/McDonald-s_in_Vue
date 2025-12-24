@@ -2,13 +2,14 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 // 导入仓库
-import { useAccountStore } from "@/Store/Modules/Account.ts";
+import { useAccountStore, useCarStore } from "@/Store/index.ts";
 import { gsap } from "gsap";
 
 // 路由
 const router = useRouter();
 // 仓库
 const accountStore = useAccountStore();
+const carStore = useCarStore();
 // 登录注册切换
 const IsRoLo = ref(true);
 // 邮箱
@@ -105,8 +106,10 @@ const isLoginSubmit = async () => {
         snackbar.value = true;
         text.value = res.message;
         colorSnack.value = "green-darken-4";
-        setTimeout(() => {
-          router.push("/");
+          console.log(2);
+        setTimeout(async() => {
+          router.push("/"); 
+          await carStore.getCarList(accountStore.Email);
         }, 2500);
       } else {
         snackbar.value = true;

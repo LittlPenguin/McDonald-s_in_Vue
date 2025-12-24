@@ -33,7 +33,7 @@ const addCarsMethods = async () => {
     goodsDetails.value.goods_id,
     accountStore.Email
   );
-  if (res.code === 200) {
+  if (res.code == 200) {
     snackbarColor.value = snackbarColorMap[0];
   } else {
     snackbarColor.value = snackbarColorMap[1];
@@ -51,14 +51,14 @@ onMounted(async () => {
     <v-snackbar
       style="top: 100px"
       location="top"
-      color="green-darken-4"
+      :color="snackbarColor"
       variant="tonal"
       v-model="snackbar"
       timeout="1000"
     >
       {{ snackbarText }}
       <template v-slot:actions>
-        <v-btn color="green-darken-4" variant="tonal" @click="snackbar = false">
+        <v-btn :color="snackbarColor" variant="tonal" @click="snackbar = false">
           Close
         </v-btn>
       </template>

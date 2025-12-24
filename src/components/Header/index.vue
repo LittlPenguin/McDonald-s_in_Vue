@@ -16,6 +16,10 @@ watch(
   },
   { deep: true }
 );
+
+const goClearLogin = () => {
+  accountStore.clearLogin();
+};
 </script>
 <template>
   <div class="HeaderCom">
@@ -52,6 +56,7 @@ watch(
             <v-badge
               location="top right"
               color="warning"
+              :model-value="carStore.total"
               :content="carStore.total"
             >
               OrderCar
@@ -79,13 +84,30 @@ watch(
       class="HeaderCom_right"
       @click="router.push('/car')"
     >
-      <span style="padding: 0 10px" class="HeaderCom_ right_span"
-        >My Order</span
-      >
-      <v-icon
-        class="iconfont icon-renwu-ren headerShopping"
-        size="large"
-      ></v-icon>
+      <v-menu open-on-hover>
+        <template v-slot:activator="{ props }">
+          <div color="primary" v-bind="props">
+            <span style="padding: 0 10px" class="HeaderCom_ right_span"
+              >My Order</span
+            >
+            <v-icon
+              class="iconfont icon-renwu-ren headerShopping"
+              size="large"
+            ></v-icon>
+          </div>
+        </template>
+        <div
+          style="
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            cursor: pointer;
+          "
+          @click="goClearLogin"
+        >
+          退出账户?
+        </div>
+      </v-menu>
     </div>
   </div>
 </template>

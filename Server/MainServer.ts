@@ -105,6 +105,35 @@ app.get("/goods", async (req, res) => {
   }
 });
 
+// 获取购物车
+app.get("/getcar", async (req, res) => {
+  try {
+    const sql = `select * from mcdonalds_user_purchase c INNER JOIN mcdonalds_goods g on c.goods_id=g.goods_id  where user_email = ?`;
+    const data = (await queryDatabase(sql, [req.query.user_email])) as any[];
+    const newdata = data.map((item) => {
+      if (item.img_url) {
+        item.img_url = `/assets/Images/Menu/${item.category}/${item.goods_name}.png`;
+      }
+      if (item.category) {
+        item.category =
+          EnZnCategory[item.category as keyof typeof EnZnCategory];
+      }
+      return item;
+    });
+    res.status(200).json({
+      code: 200,
+      message: "获取购物车成功",
+      data: data,
+    });
+  } catch (error) {
+    console.error("获取购物车失败:", error);
+    res.status(500).json({
+      code: 500,
+      message: "获取购物车失败",
+    });
+  }
+});
+
 // 加入购物车
 app.post("/car", async (req, res) => {
   try {
@@ -115,6 +144,13 @@ app.post("/car", async (req, res) => {
         message: "商品ID不能为空",
       });
     }
+    if (!user_email) {
+      res.status(201).json({
+        code: 201,
+        message: "你需要登陆才能添加商品",
+      });
+      return
+    }
     const checkDataSql = `select * from  mcdonalds_user_purchase where goods_id = ? and user_email = ?`;
     const checkDataRes = (await queryDatabase(checkDataSql, [
       goods_id,
@@ -123,7 +159,6 @@ app.post("/car", async (req, res) => {
     if (checkDataRes.length === 0) {
       let sql =
         "insert into mcdonalds_user_purchase (goods_id,user_email) values (?,?)";
-
       (await queryDatabase(sql, [goods_id, user_email])) as any[];
     } else {
       let sql =
@@ -144,6 +179,32 @@ app.post("/car", async (req, res) => {
     res.status(500).json({
       code: 500,
       message: "加入购物车失败",
+    });
+  }
+});
+
+// 清空购物车
+app.get("/clearcar", async (req, res) => {
+  try {
+    console.log(req.query);
+
+    const { user_email } = req.query;
+    if (!user_email) {
+      res.status(400).json({
+        code: 400,
+        message: "用户邮箱不能为空",
+      });
+    }
+    let sql = "delete from mcdonalds_user_purchase where user_email = ?";
+    (await queryDatabase(sql, [user_email])) as any[];
+    res.status(200).json({
+      code: 200,
+      message: "购买成功",
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      message: "购买失败",
     });
   }
 });

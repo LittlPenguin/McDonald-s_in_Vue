@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { loginAPI, RegisterAPI } from "@/API/Modules/admin.ts";
 import type { AccountTypes } from "@/Types/Account.d.ts";
+import { useCarStore } from "./Car";
 
 export const useAccountStore = defineStore(
   "AccountStore",
@@ -21,7 +22,13 @@ export const useAccountStore = defineStore(
       const { data: res } = await RegisterAPI(data);
       return res;
     };
-    return { Email, LoginMethods, RegisterMethods };
+    // 退出登录
+    const clearLogin = async () => {
+      Email.value = "";
+      const carStore = useCarStore();
+      carStore.outLo();
+    };
+    return { Email, LoginMethods, RegisterMethods, clearLogin };
   },
   {
     persist: true,

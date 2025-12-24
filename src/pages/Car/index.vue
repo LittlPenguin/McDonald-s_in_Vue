@@ -1,40 +1,95 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick, computed } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+import { getImagePath } from "@/utils/Import";
+import { useCarStore, useAccountStore } from "@/Store/index.ts";
+const carStore = useCarStore();
+const accountStore = useAccountStore();
+// gsap
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
+
 // 左侧数字索引
 const liIndexLeft = (index: number) => {
   return index >= 10 ? index : "0" + index;
 };
-
 // 列表项动画引用
 const TrendingLiAniMationRefs = ref<HTMLElement[]>([]);
 const TotalOrder = ref();
 onMounted(() => {
-  TrendingLiAniMationRefs.value.forEach((item) => {
-    gsap.from(item, {
-      scrollTrigger: {
-        trigger: item,
-        start: "top 90%",
-      },
-      x: -100,
+  nextTick(() => {
+    TrendingLiAniMationRefs.value.forEach((item) => {
+      gsap.from(item, {
+        scrollTrigger: {
+          trigger: item,
+          start: "top 90%",
+        },
+        x: -100,
+        autoAlpha: 0,
+        duration: 0.5,
+        ease: "back.inOut(1.7)",
+      });
+    });
+    gsap.from(TotalOrder.value, {
+      x: 100,
       autoAlpha: 0,
-      duration: 0.5,
+      duration: 0.8,
+      delay: 0.3,
       ease: "back.inOut(1.7)",
     });
   });
-  gsap.from(TotalOrder.value, {
-    x: 100,
-    autoAlpha: 0,
-    duration: 0.8,
-    delay: 0.3,
-    ease: "back.inOut(1.7)",
-  });
 });
+
+// 获取数据
+onMounted(async () => {
+  await carStore.getCarList(accountStore.Email);
+});
+
+// 计算价格
+const totalPrice = computed(() => {
+  let total = 0;
+  carStore.carList.forEach((item) => {
+    total += item.price * item.buy_quantity;
+  });
+  return total;
+});
+
+// 交易提示
+const snackbar = ref(false);
+const snackbarText = ref("你好");
+const snackbarColorMap = ["green-darken-4", "red-darken-4"];
+const snackbarColor = ref(snackbarColorMap[0]);
+// 购买
+const orderPay = async () => {
+  const { data: res } = await carStore.clearCar(accountStore.Email);
+  if (res.code === 200) {
+    snackbarColor.value = snackbarColorMap[0];
+  } else {
+    snackbarColor.value = snackbarColorMap[1];
+  }
+  snackbar.value = true;
+  snackbarText.value = res.message;
+};
 </script>
 <template>
   <div class="Trending" ref="CardOrder">
+    <v-snackbar
+      style="top: 100px"
+      location="top"
+      color="green-darken-4"
+      variant="tonal"
+      v-model="snackbar"
+      timeout="1000"
+    >
+      {{ snackbarText }}
+      <template v-slot:actions>
+        <v-btn color="green-darken-4" variant="tonal" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
     <div class="header">
       <div class="left">
         <div class="one">
@@ -47,50 +102,66 @@ onMounted(() => {
         Most ordered items across the globe in the last 24 hours.
       </div>
     </div>
+    <v-empty-state
+      style="margin: 100px 0"
+      v-if="!carStore.carList.length"
+      text="这里好像没有你的订单数据喔"
+      title="你下单了吗"
+    ></v-empty-state>
     <div class="main">
       <ul>
         <li
-          v-for="(value, index) in 10"
+          v-for="(value, index) in carStore.carList"
           :ref="(el) => TrendingLiAniMationRefs.push(el as HTMLElement)"
         >
           <div class="left">{{ liIndexLeft(index + 1) }}</div>
           <div class="middle">
-            <img src="" alt="" />
+            <img
+              style="height: 100%"
+              :src="getImagePath(value.img_url)"
+              alt=""
+            />
           </div>
           <div class="right">
             <div class="header">
               <div class="left">Trending</div>
-              <div class="right">Burgers</div>
+              <div class="right">{{ value.category }}</div>
             </div>
-            <div class="title">Quarter Pounder</div>
+            <div class="title">{{ value.goods_name }}</div>
             <div class="des">
-              A quarter pound of 100% fresh beef that’s hot, deliciously juicy
-              and cooked when you order.
+              {{ value.goods_desc }}
             </div>
             <div class="footer">
-              <div class="pric">$6.49</div>
-              <div class="detail">View Details</div>
+              <div class="pric">${{ (value.price * value.buy_quantity).toFixed(2) }}</div>
+              <div
+                class="detail"
+                @click="router.push(`/buy/${value.goods_id}`)"
+              >
+                View Details
+              </div>
             </div>
           </div>
         </li>
       </ul>
-      <div class="order" ref="TotalOrder">
+      <div class="order" ref="TotalOrder" v-if="carStore.carList.length">
         <div class="title">Summary</div>
         <div class="Subtotal">
           <div class="top">
             <span>Subtotal</span>
-            <span>$5.99</span>
+            <span>$ {{ totalPrice.toFixed(2)  }}</span>
           </div>
           <div class="bottom">
             <span>Tax (8%)</span>
-            <span>$0.48</span>
+            <span>${{ (totalPrice * 0.08).toFixed(2) }}</span>
           </div>
         </div>
         <div class="total">
           <span>Total</span>
-          <span class="totalPrice">$6.47</span>
+          <span class="totalPrice"
+            >${{ (totalPrice - totalPrice * 0.08).toFixed(2) }}</span
+          >
         </div>
-        <div class="checkout">Checkout</div>
+        <div class="checkout" @click="orderPay()">Checkout</div>
       </div>
     </div>
   </div>
@@ -184,7 +255,7 @@ onMounted(() => {
           flex: 3;
           height: 80%;
           border-radius: 20px;
-          background-color: palegoldenrod;
+          background-color: #ffa900;
         }
         & > .right {
           padding-left: 20px;

@@ -8,3 +8,13 @@ export const addCarAPI = async (CarData: {
 }) => {
   return await https.post("/car", CarData);
 };
+
+// 获取
+export const getCarListAPI = async (user_email: { user_email: string }) => {
+  return await https.get("/getcar", { params: user_email });
+};
+
+// 清空
+export const deleteCarListAPI=async (user_email: { user_email: string }) => {
+  return await https.get("/clearcar", { params: user_email });
+}
