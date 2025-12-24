@@ -1,30 +1,61 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { onMounted, ref } from "vue";
+import { getGoodsDetailAPI } from "@/API/Modules/goods.ts";
+import { getImagePath } from "@/utils/Import.ts";
+// 路由
+import { useRouter, useRoute } from "vue-router";
+const router = useRouter();
+const route = useRoute();
+
+// pinia
+import { useCarStore, useAccountStore } from "@/Store/index.ts";
+const carStore = useCarStore();
+const accountStore = useAccountStore();
+// 获取商品参数
+const goodsId = ref("");
+// 获取商品详情
+const goodsDetails = ref();
+const getGoodsDetail = async () => {
+  const {
+    data: { data },
+  } = await getGoodsDetailAPI({ goods_id: goodsId.value });
+  goodsDetails.value = data;
+};
+onMounted(async () => {
+  goodsId.value = route.params.goodsId;
+  await getGoodsDetail();
+});
+</script>
 <template>
   <div class="Buy">
-    <div class="left"></div>
+    <div class="left">
+      <img :src="getImagePath(goodsDetails?.img_url || '')" alt="" />
+    </div>
     <div class="right">
-      <div class="header">
+      <div class="header" @click="router.go(-1)">
         <v-icon class="iconfont icon-cc-arrow-left"></v-icon>
-
         Back to Menu
       </div>
-      <div class="goodsCate">Burgers</div>
-      <div class="goodsName">Quarter Pounder</div>
+      <div class="goodsCate">{{ goodsDetails?.category }}</div>
+      <div class="goodsName">{{ goodsDetails?.goods_name }}</div>
       <div class="goodsDes">
-        A quarter pound of 100% fresh beef that’s hot, deliciously juicy and
-        cooked when you order.
+        {{ goodsDetails?.goods_desc }}
       </div>
       <div class="goodsPri">
         <div class="left">
           <div class="top">Price</div>
-          <div class="bottom">$6.49</div>
+          <div class="bottom">${{ goodsDetails?.price }}</div>
         </div>
         <div class="right">
           <div class="top">Calories</div>
-          <div class="bottom">520</div>
+          <div class="bottom">{{ goodsDetails?.calorie }}</div>
         </div>
       </div>
-      <div class="add" style="user-select: none;">
+      <div
+        class="add"
+        style="user-select: none"
+        @click="carStore.addCar(goodsDetails.goods_id, accountStore.Email)"
+      >
         <v-icon class="iconfont icon-plus"></v-icon>
         Add to Order
       </div>
@@ -46,8 +77,17 @@
     width: 35%;
     height: 100%;
     border-radius: 15px;
-    background-color: palegoldenrod;
     height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scale(1.2);
+      border-radius: 15px;
+    }
   }
   & .right {
     height: 100%;

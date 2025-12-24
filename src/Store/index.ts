@@ -7,3 +7,4 @@ pinia.use(piniaPluginPersistedstate);
 // 导出Pinia和他的仓库
 export default pinia;
 export * from "./Modules/Account";
+export * from "./Modules/Car";

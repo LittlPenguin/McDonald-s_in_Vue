@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import mysql from "mysql2/promise";
+import { EnZnCategory } from "../src/utils/EnZnCategory.ts";
 
 const app = express();
 const port = 8080;
@@ -69,6 +70,79 @@ app.get("/menu", async (req, res) => {
   }
 });
 
+//获取详细商品
+app.get("/goods", async (req, res) => {
+  try {
+    const sql = `select * from mcdonalds_goods where goods_id = ? `;
+    const data = (await queryDatabase(sql, [req.query.goods_id])) as any[];
+    if (data.length === 0) {
+      return res.status(404).json({
+        code: 404,
+        message: "商品不存在",
+      });
+    }
+    let newData = data.map((item) => {
+      if (item.img_url) {
+        item.img_url = `/assets/Images/Menu/${item.category}/${item.goods_name}.png`;
+      }
+      if (item.category) {
+        item.category =
+          EnZnCategory[item.category as keyof typeof EnZnCategory];
+      }
+      return item;
+    });
+    res.status(200).json({
+      code: 200,
+      message: "获取商品成功",
+      data: newData[0],
+    });
+  } catch (error) {
+    console.error("获取商品失败:", error);
+    res.status(500).json({
+      code: 500,
+      message: "获取商品失败",
+    });
+  }
+});
+
+// 加入购物车
+app.post("/car", async (req, res) => {
+  try {
+    const { goods_id, user_email } = req.body;
+    if (!goods_id) {
+      res.status(400).json({
+        code: 400,
+        message: "商品ID不能为空",
+      });
+    }
+    const checkDataSql = `select * from  mcdonalds_user_purchase where goods_id = ? and user_email = ?`;
+    const checkDataRes = (await queryDatabase(checkDataSql, [
+      goods_id,
+      user_email,
+    ])) as any[];
+    if (checkDataRes.length === 0) {
+      let sql =
+        "insert into mcdonalds_user_purchase (goods_id,user_email) values (?,?)";
+
+      (await queryDatabase(sql, [goods_id, user_email])) as any[];
+    } else {
+      let sql =
+        "update  mcdonalds_user_purchase set buy_quantity = buy_quantity + 1 where goods_id = ? and user_email = ?";
+      (await queryDatabase(sql, [goods_id, user_email])) as any[];
+    }
+    res.status(200).json({
+      code: 200,
+      message: "加入购物车成功",
+    });
+  } catch (error) {
+    console.error("加入购物车失败:", error);
+    res.status(500).json({
+      code: 500,
+      message: "加入购物车失败",
+    });
+  }
+});
+
 //注册
 app.post("/register", async (req, res) => {
   try {
@@ -107,8 +181,6 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { CountEmail, CountPassword } = req.body;
-    console.log(CountEmail, CountPassword);
-
     if (!CountEmail || !CountPassword) {
       res.status(400).json({
         code: 400,
