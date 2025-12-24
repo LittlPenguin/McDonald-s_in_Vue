@@ -1,70 +1,102 @@
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
-import byorder from "@/assets/Images/byorder.jpg";
+import { onMounted, ref, nextTick, watch } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+import { getMenuAPI } from "@/API/Modules/menu.ts";
+import { getImagePath } from "@/utils/Import.ts";
+import type { MenuItemTypes } from "@/Types/Menu.d.ts";
 //导入Gsap
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
 
 // 选择分类小类
-const listMaps = ref(["汉堡", "小食", "甜品", "饮品", "早餐"]);
+const MenuMainList = ref<MenuItemTypes[]>([]);
+const listMaps = ref(["汉堡", "小食", "甜品", "饮品"]);
 const selectCategoryRefs = ref<any[]>([]);
 const selectCategry = (index: number) => {
   selectCategoryAllRefs.value?.classList.remove("active");
-  selectCategoryRefs.value.forEach((item, ind) => {
+  selectCategoryRefs.value.forEach(async (item, ind) => {
     item.classList.remove("active");
     if (ind === index) {
       item.classList.add("active");
+
+      const {
+        data: { data },
+      } = await getMenuAPI({ Category: listMaps.value[index] });
+      MenuMainList.value = data;
     }
   });
 };
 // 选择分类大类
 const selectCategoryAllRefs = ref<HTMLLIElement>();
-const selectCategoryAll = () => {
+const selectCategoryAll = async () => {
   selectCategoryRefs.value.forEach((item) => {
     item.classList.remove("active");
   });
   selectCategoryAllRefs.value?.classList.add("active");
+  const {
+    data: { data },
+  } = await getMenuAPI({ Category: "所有" });
+  MenuMainList.value = data;
 };
+
+onMounted(async () => {
+  const {
+    data: { data },
+  } = await getMenuAPI({ Category: "所有" });
+  MenuMainList.value = data;
+});
 
 // 动画区域
 const MenuMainLiRefs = ref<HTMLElement[]>([]);
 const lineItemCount = ref<number[]>([]);
-onMounted(() => {
+const MenuAnimation = () => {
   let lineItemCountB = 0;
   let lineItemCountA = 0;
   MenuMainLiRefs.value.forEach((item, index) => {
     // 为每个元素单独创建 ScrollTrigger
     // 判断一行有多少个
-    if (lineItemCountA === item.offsetTop || lineItemCountA === 0) {
-      lineItemCountB++;
-      lineItemCountA = item.offsetTop;
-    } else {
-      lineItemCount.value.push(lineItemCountB);
-      lineItemCountA = item.offsetTop;
-      lineItemCountB = 0;
+    if (item) {
+      if (lineItemCountA === item.offsetTop || lineItemCountA === 0) {
+        lineItemCountB++;
+        lineItemCountA = item.offsetTop;
+      } else {
+        lineItemCount.value.push(lineItemCountB);
+        lineItemCountA = item.offsetTop;
+        lineItemCountB = 0;
+      }
+      // 先隐藏所有元素
+      gsap.set(item, { autoAlpha: 0, y: 100 });
+      // 为每个元素创建独立的 ScrollTrigger
+      ScrollTrigger.create({
+        trigger: item,
+        once: true,
+        onEnter: () => {
+          // 当元素进入视口时，延时执行动画
+          gsap.to(item, {
+            ease: "back.inOut(1.7)",
+            autoAlpha: 1,
+            duration: 1,
+            y: 0,
+            delay: lineItemCount.value[0]
+              ? (index % lineItemCount.value[0]!) * 0.1
+              : index * 0.1,
+          });
+        },
+      });
     }
-    // 先隐藏所有元素
-    gsap.set(item, { autoAlpha: 0, y: 100 });
-    // 为每个元素创建独立的 ScrollTrigger
-    ScrollTrigger.create({
-      trigger: item,
-      once: true,
-      onEnter: () => {
-        // 当元素进入视口时，延时执行动画
-        gsap.to(item, {
-          ease: "back.inOut(1.7)",
-          autoAlpha: 1,
-          duration: 1,
-          y: 0,
-          delay: lineItemCount.value[0]
-            ? (index % lineItemCount.value[0]!) * 0.1
-            : index * 0.1,
-        });
-      },
-    });
   });
-});
+};
+watch(
+  () => MenuMainList.value,
+  () => {
+    nextTick(() => {
+      MenuAnimation();
+    });
+  },
+  { deep: true }
+);
 </script>
 <template>
   <div class="Menu">
@@ -79,7 +111,7 @@ onMounted(() => {
           所有
         </li>
         <li
-          :ref="(el:any)=>selectCategoryRefs.push(el)"
+          :ref="(el:any)=>selectCategoryRefs[ind]=el"
           v-for="(val, ind) in listMaps"
           :key="ind"
           @click="selectCategry(ind)"
@@ -91,17 +123,20 @@ onMounted(() => {
     <div class="main">
       <ul>
         <li
-          v-for="value in 10"
-          :ref="(el)=>MenuMainLiRefs.push(el as HTMLElement)"
+          style="cursor: pointer"
+          v-for="(value, index) in MenuMainList"
+          :key="value.goods_id"
+          :ref="(el) => (MenuMainLiRefs[index] = el)"
+          @click="router.push(`/buy/${value.goods_id}`)"
         >
           <div class="pic">
-            <img :src="byorder" alt="" />
+            <img :src="getImagePath(value.img_url)" alt="" />
           </div>
-          <div class="title">Big Mac</div>
+          <div class="title">{{ value.goods_name }}</div>
           <div class="price">
-            <div class="left">550 KCAL</div>
+            <div class="left">{{ value.calorie }} KCAL</div>
             <div class="middle"></div>
-            <div class="right">$5.99</div>
+            <div class="right">${{ value.price }}</div>
           </div>
         </li>
       </ul>

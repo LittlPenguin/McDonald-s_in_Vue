@@ -23,11 +23,11 @@ app.use(
 
 app.use(express.json());
 
-async function queryDatabase(sql: string) {
+async function queryDatabase(sql: string, params?: any[]) {
   let connection;
   try {
     connection = await mysql.createConnection(dbConfig);
-    const [rows] = await connection.execute(sql);
+    const [rows] = await connection.execute(sql, params);
     return rows; // 返回查询结果
   } catch (error) {
     console.error("数据库查询失败:", error);
@@ -38,6 +38,36 @@ async function queryDatabase(sql: string) {
     }
   }
 }
+
+//获取菜单
+app.get("/menu", async (req, res) => {
+  try {
+    let sql;
+    if (req.query.Category === "所有") {
+      sql = `select * from mcdonalds_goods`;
+    } else {
+      sql = `select * from mcdonalds_goods where Category = ?`;
+    }
+    const data = (await queryDatabase(sql, [req.query.Category])) as any[];
+    let newData = data.map((item) => {
+      if (item.img_url) {
+        item.img_url = `/assets/Images/Menu/${item.category}/${item.goods_name}.png`;
+      }
+      return item;
+    });
+    res.status(200).json({
+      code: 200,
+      message: "获取菜单成功",
+      data: newData,
+    });
+  } catch (error) {
+    console.error("获取菜单失败:", error);
+    res.status(500).json({
+      code: 500,
+      message: "获取菜单失败",
+    });
+  }
+});
 
 //注册
 app.post("/register", async (req, res) => {
@@ -50,15 +80,15 @@ app.post("/register", async (req, res) => {
       });
     }
     const checkSql = `select * from account where CountEmail = '${CountEmail}'`;
-    const checkData = (await queryDatabase(checkSql)) as any[];
+    const checkData = (await queryDatabase(checkSql, [CountEmail])) as any[];
     if (checkData.length > 0) {
       res.status(201).json({
         code: 201,
         message: "邮箱已存在",
       });
     } else {
-      const insertSql = `insert account (CountEmail,CountPassword) values ('${CountEmail}','${CountPassword}')`;
-      await queryDatabase(insertSql);
+      const insertSql = `insert account (CountEmail,CountPassword) values (?,?)`;
+      await queryDatabase(insertSql, [CountEmail, CountPassword]);
       res.status(200).json({
         code: 200,
         message: "注册成功",
@@ -85,8 +115,11 @@ app.post("/login", async (req, res) => {
         message: "邮箱或密码不能为空",
       });
     }
-    const sql = `select * from account where CountEmail='${CountEmail}' and CountPassword='${CountPassword}'`;
-    const data = (await queryDatabase(sql)) as any[];
+    const sql = `select * from account where CountEmail= ? and CountPassword= ?`;
+    const data = (await queryDatabase(sql, [
+      CountEmail,
+      CountPassword,
+    ])) as any[];
     if (data.length === 0) {
       return res.status(210).json({
         code: 210,
@@ -96,7 +129,7 @@ app.post("/login", async (req, res) => {
     res.status(200).json({
       code: 200,
       message: "登录成功",
-      data:data[0],
+      data: data[0],
     });
   } catch (error) {
     console.error("登录失败:", error);
