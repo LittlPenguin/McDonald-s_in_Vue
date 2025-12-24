@@ -1,18 +1,35 @@
 <script lang="ts" setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+// 导入仓库
+import { useAccountStore } from "@/Store/Modules/Account.ts";
 import { gsap } from "gsap";
+
+// 路由
+const router = useRouter();
+// 仓库
+const accountStore = useAccountStore();
+// 登录注册切换
 const IsRoLo = ref(true);
 // 邮箱
-const email = ref("");
+const LoginEmail = ref("");
 // 密码
-const password = ref("");
-const RePassword = ref("");
-// 登录状态
+const LoginPassword = ref("");
+const RegisterRePassword = ref("");
+// 表单验证状态
 const isLogin = ref(false);
+// 表单实例
+const formRef = ref<HTMLFormElement[]>([]);
 
+// 消息提示
+const snackbar = ref(false);
+const text = ref("你好");
+const timeout = ref(1000);
+const colorSnack = ref("green-darken-4");
 // 邮箱
 const emailRules = [
   (value: string) => {
+    if (!value) return "邮箱呢";
     if (
       !/^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(
         value
@@ -20,25 +37,24 @@ const emailRules = [
     ) {
       return "你需要输入正确的邮箱格式";
     }
-    return true;
   },
 ];
 // 密码
 const passwordRules = [
   (value: string) => {
-    if (value) return true;
-    return "密码呢";
+    if (!value) return "密码呢";
   },
 ];
 // 重复密码
 const RePasswordRules = [
   (value: string) => {
-    if (value !== password.value) {
+    if (!value) return "密码呢";
+    if (value !== LoginPassword.value) {
       return "两次密码输入不一致";
     }
-    return true;
   },
 ];
+
 // 切换
 const bodyAnimationTimeLine = gsap.timeline();
 const ChangeOk = ref(true);
@@ -65,9 +81,9 @@ const GoRoLo = () => {
       filter: "blur(0px)",
       onStart: () => {
         IsRoLo.value = !IsRoLo.value;
-        email.value = "";
-        password.value = "";
-        RePassword.value = "";
+        formRef.value[0].reset();
+        formRef.value[1].reset();
+        isLogin.value = null;
         gsap.set(LoginAnimationRefs.value[!IsRoLo.value ? 1 : 0]!, {
           filter: "blur(250px)",
         });
@@ -77,10 +93,45 @@ const GoRoLo = () => {
       },
     });
 };
-
-// 登录
-const isLoginSubmit = () => {
-  console.log(isLogin.value);
+// 登录成功
+const isLoginSubmit = async () => {
+  if (isLogin.value) {
+    if (IsRoLo.value) {
+      const res = await accountStore.LoginMethods({
+        CountEmail: LoginEmail.value,
+        CountPassword: LoginPassword.value,
+      });
+      if (res.code === 200) {
+        snackbar.value = true;
+        text.value = res.message;
+        colorSnack.value = "green-darken-4";
+        setTimeout(() => {
+          router.push("/");
+        }, 2500);
+      } else {
+        snackbar.value = true;
+        text.value = res.message;
+        colorSnack.value = "red-darken-4";
+      }
+    } else {
+      const res = await accountStore.RegisterMethods({
+        CountEmail: LoginEmail.value,
+        CountPassword: LoginPassword.value,
+      });
+      if (res.code === 200) {
+        snackbar.value = true;
+        text.value = res.message;
+        colorSnack.value = "green-darken-4";
+        setTimeout(() => {
+          GoRoLo();
+        }, 1500);
+      } else {
+        snackbar.value = true;
+        text.value = res.message;
+        colorSnack.value = "red-darken-4";
+      }
+    }
+  }
 };
 
 const LoginAnimationRefs = ref<HTMLElement[]>([]);
@@ -108,6 +159,22 @@ onMounted(() => {
 </script>
 <template>
   <div class="Login">
+    <v-snackbar
+      style="top: 100px"
+      location="top"
+      :color="colorSnack"
+      variant="tonal"
+      v-model="snackbar"
+      :timeout="timeout"
+    >
+      {{ text }}
+      <template v-slot:actions>
+        <v-btn :color="colorSnack" variant="tonal" @click="snackbar = false">
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
+
     <!-- 登录 -->
     <div
       class="body"
@@ -138,24 +205,22 @@ onMounted(() => {
         </div>
       </div>
       <v-form
-        @submit="isLoginSubmit"
-        fast-fail
+        :ref="(el)=>formRef.push(el as HTMLFormElement)"
+        @submit="isLoginSubmit()"
         v-model="isLogin"
         @submit.prevent
         class="FormTick"
       >
         <v-text-field
-          v-model="email"
+          v-model="LoginEmail"
           :rules="emailRules"
           label="E-mail"
-          required
         ></v-text-field>
         <v-text-field
-          v-model="password"
+          v-model="LoginPassword"
           :rules="passwordRules"
           type="password"
           label="Password"
-          required
         ></v-text-field>
         <v-btn class="mt-2" type="submit" block>Submit</v-btn>
       </v-form>
@@ -184,31 +249,28 @@ onMounted(() => {
         </div>
       </div>
       <v-form
-        @submit="isLoginSubmit"
-        fast-fail
+        :ref="(el)=>formRef.push(el as HTMLFormElement)"
+        @submit="isLoginSubmit()"
         v-model="isLogin"
         @submit.prevent
         class="FormTick"
       >
         <v-text-field
-          v-model="email"
+          v-model="LoginEmail"
           :rules="emailRules"
           label="E-mail"
-          required
         ></v-text-field>
         <v-text-field
-          v-model="password"
+          v-model="LoginPassword"
           :rules="passwordRules"
           type="password"
           label="Password"
-          required
         ></v-text-field>
         <v-text-field
-          v-model="RePassword"
+          v-model="RegisterRePassword"
           :rules="RePasswordRules"
           type="password"
-          label="Password"
-          required
+          label="RePassword"
         ></v-text-field>
         <v-btn class="mt-2" type="submit" block>Submit</v-btn>
       </v-form>

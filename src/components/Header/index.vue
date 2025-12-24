@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { watch, ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useAccountStore } from "@/Store/index.ts";
+const accountStore = useAccountStore();
+
 const router = useRouter();
 const route = useRoute();
 
@@ -52,8 +55,27 @@ watch(
         </li>
       </ul>
     </div>
-    <div class="HeaderCom_right" @click="router.push('/login')">
-      <span class="HeaderCom_ right_span">My Tray</span>
+    <div
+      v-if="!accountStore.Email"
+      class="HeaderCom_right"
+      @click="router.push('/login')"
+    >
+      <span style="padding: 0 10px" class="HeaderCom_ right_span"
+        >My Account</span
+      >
+      <v-icon
+        class="iconfont icon-renwu-ren headerShopping"
+        size="large"
+      ></v-icon>
+    </div>
+    <div
+      v-if="accountStore.Email"
+      class="HeaderCom_right"
+      @click="router.push('/car')"
+    >
+      <span style="padding: 0 10px" class="HeaderCom_ right_span"
+        >My Order</span
+      >
       <v-icon
         class="iconfont icon-renwu-ren headerShopping"
         size="large"
