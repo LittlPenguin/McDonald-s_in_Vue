@@ -23,7 +23,7 @@ const getRandomColor = () => {
 // 动画区域
 const OffersMainAnimationRef = ref();
 const OffersLi = ref<HTMLElement[]>([]);
-const OffersMainAnimation=()=>{
+const OffersMainAnimation = () => {
   OffersLi.value.forEach(async (item, index) => {
     // 先隐藏所有元素
     gsap.set(item, { autoAlpha: 0, y: 100 });
@@ -43,7 +43,7 @@ const OffersMainAnimation=()=>{
       },
     });
   });
-}
+};
 
 const OffersData = ref<any[]>([]);
 onMounted(async () => {
@@ -51,9 +51,9 @@ onMounted(async () => {
     data: { data },
   } = await getOffersAPI();
   OffersData.value = data;
-  nextTick(()=>{
-    OffersMainAnimation()
-  })
+  nextTick(() => {
+    OffersMainAnimation();
+  });
 });
 </script>
 <template>
@@ -189,8 +189,8 @@ onMounted(async () => {
             & img {
               height: 100%;
               position: absolute;
-              top: 40%;
-              right: -10px;
+              top: 45%;
+              right: 0px;
               transform: translateY(-50%);
             }
           }
@@ -222,7 +222,6 @@ onMounted(async () => {
               flex: 3;
               padding-bottom: 20px;
               margin: 20px 20px 0 20px;
-              border-bottom: 1px solid #505050;
               & .top {
                 font-size: 30px;
                 font-family: "微软雅黑";

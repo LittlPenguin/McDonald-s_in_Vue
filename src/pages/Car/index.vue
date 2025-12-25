@@ -132,13 +132,34 @@ const orderPay = async () => {
               {{ value.goods_desc }}
             </div>
             <div class="footer">
-              <div class="pric">${{ (value.price * value.buy_quantity).toFixed(2) }}</div>
+              <div class="pric">
+                ${{ (value.price * value.buy_quantity).toFixed(2) }}
+              </div>
               <div
                 class="detail"
                 @click="router.push(`/buy/${value.goods_id}`)"
               >
                 View Details
               </div>
+            </div>
+          </div>
+          <div class="change">
+            <div class="changeNum">
+              <v-btn
+                color="#ffa000"
+                @click="
+                  carStore.changeQuantity(value.goods_id, accountStore.Email, 1)
+                "
+                >-</v-btn
+              >
+              <span style="font-size: 24px">{{ value.buy_quantity }}</span>
+              <v-btn
+                color="#ffa000"
+                @click="
+                  carStore.changeQuantity(value.goods_id, accountStore.Email, 2)
+                "
+                >+</v-btn
+              >
             </div>
           </div>
         </li>
@@ -148,7 +169,7 @@ const orderPay = async () => {
         <div class="Subtotal">
           <div class="top">
             <span>Subtotal</span>
-            <span>$ {{ totalPrice.toFixed(2)  }}</span>
+            <span>$ {{ totalPrice.toFixed(2) }}</span>
           </div>
           <div class="bottom">
             <span>Tax (8%)</span>
@@ -317,6 +338,27 @@ const orderPay = async () => {
                 color: #000;
                 background-color: #fff;
               }
+            }
+          }
+        }
+        position: relative;
+        & .change {
+          position: absolute;
+          right: 50px;
+          bottom: 2vw;
+          transform: translateY(-50%);
+          & .changeNum {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            & .v-btn {
+              min-width: 10px;
+              font-size: 26px;
+            }
+            & span {
+              display: block;
+              font-size: 24px;
+              margin: 0 10px;
             }
           }
         }

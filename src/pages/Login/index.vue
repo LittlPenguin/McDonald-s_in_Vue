@@ -106,9 +106,8 @@ const isLoginSubmit = async () => {
         snackbar.value = true;
         text.value = res.message;
         colorSnack.value = "green-darken-4";
-          console.log(2);
-        setTimeout(async() => {
-          router.push("/"); 
+        setTimeout(async () => {
+          router.push("/");
           await carStore.getCarList(accountStore.Email);
         }, 2500);
       } else {

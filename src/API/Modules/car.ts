@@ -18,3 +18,12 @@ export const getCarListAPI = async (user_email: { user_email: string }) => {
 export const deleteCarListAPI=async (user_email: { user_email: string }) => {
   return await https.get("/clearcar", { params: user_email });
 }
+
+// 修改购物车数量
+export const changeQuantityAPI = async (CarData: {
+  goods_id: string;
+  user_email: string;
+  type: string;
+}) => {
+  return await https.post("/changequantity", CarData);
+};

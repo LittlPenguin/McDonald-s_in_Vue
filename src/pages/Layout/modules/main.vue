@@ -3,8 +3,9 @@ import AniMationText from "@/components/AnimationText/index.vue";
 import pgscscnb from "@/assets/images/培根蔬萃双层牛堡.png";
 import shutiao from "@/assets/images/薯条.png";
 import coke from "@/assets/images/可乐.png";
-import cofe1 from "@/assets/images/cofe1.jpg";
-
+import byorder from "@/assets/images/byorder.jpg";
+import shop from "@/assets/images/shop.jpg";
+import deliever from "@/assets/images/deliever.jpg";
 import { onMounted, ref } from "vue";
 
 // 路由跳转
@@ -16,6 +17,27 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { SplitText } from "gsap/SplitText";
 gsap.registerPlugin(SplitText, ScrollTrigger);
+
+const footerList = ref([
+  {
+    title: "点餐",
+    img: byorder,
+    left: "点餐环节",
+    right: "30秒极速下单",
+  },
+  {
+    title: "制作",
+    img: shop,
+    left: "制作环节",
+    right: "现做热乎味",
+  },
+  {
+    title: "配送",
+    img: deliever,
+    left: "配送环节",
+    right: "20分钟必达",
+  },
+]);
 
 const LayoutMainSplit = ref(null);
 const t1 = ref<HTMLElement[]>([]);
@@ -140,15 +162,15 @@ onMounted(() => {
       </div>
       <div class="main">
         <ul>
-          <li v-for="value in 3">
+          <li v-for="value in footerList">
             <div class="pic">
-              <img :src="cofe1" alt="" />
+              <img :src="value.img" alt="" />
             </div>
-            <div class="title">Big Mac</div>
+            <div class="title">{{ value.title }}</div>
             <div class="subTitle">
-              <span class="left">550 KCAL</span>
+              <span class="left">{{ value.left }}</span>
               <span class="middle"></span>
-              <span class="right">$5.99</span>
+              <span class="right">{{ value.right }}</span>
             </div>
           </li>
         </ul>

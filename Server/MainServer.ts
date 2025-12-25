@@ -40,6 +40,7 @@ async function queryDatabase(sql: string, params?: any[]) {
   }
 }
 
+// 获取随机商品
 app.get("/random", async (req, res) => {
   try {
     let sql =
@@ -231,6 +232,49 @@ app.get("/clearcar", async (req, res) => {
     res.status(500).json({
       code: 500,
       message: "购买失败",
+    });
+  }
+});
+
+// 修改购物车数量
+app.post("/changequantity", async (req, res) => {
+  try {
+    const { goods_id, user_email, type } = req.body;
+    if (!goods_id || !user_email || !type) {
+      res.status(400).json({
+        code: 400,
+        message: "商品ID、用户邮箱、操作类型不能为空",
+      });
+      return;
+    }
+    let sql = "";
+    if (type === 1) {
+      sql =
+        "update mcdonalds_user_purchase set buy_quantity = buy_quantity - 1 where goods_id = ? and user_email = ?";
+    } else if (type === 2) {
+      sql =
+        "update mcdonalds_user_purchase set buy_quantity = buy_quantity + 1 where goods_id = ? and user_email = ?";
+    }
+    (await queryDatabase(sql, [goods_id, user_email])) as any[];
+    const selectFor = `select * from mcdonalds_user_purchase where goods_id = ? and user_email = ?`;
+    const selectResult = (await queryDatabase(selectFor, [
+      goods_id,
+      user_email,
+    ])) as any[];
+    if (selectResult[0].buy_quantity <= 0) {
+      sql =
+        "delete from mcdonalds_user_purchase where goods_id = ? and user_email = ?";
+      (await queryDatabase(sql, [goods_id, user_email])) as any[];
+    }
+    res.status(200).json({
+      code: 200,
+      message: "修改购物车数量成功",
+      data: selectResult[0],
+    });
+  } catch (error) {
+    res.status(500).json({
+      code: 500,
+      message: "修改购物车数量失败",
     });
   }
 });
