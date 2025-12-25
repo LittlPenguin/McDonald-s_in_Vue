@@ -40,6 +40,32 @@ async function queryDatabase(sql: string, params?: any[]) {
   }
 }
 
+app.get("/random", async (req, res) => {
+  try {
+    let sql =
+      "SELECT * FROM (SELECT *,ROW_NUMBER() OVER (PARTITION BY category ORDER BY RAND()) AS rn FROM mcdonalds_goods) AS temp WHERE temp.rn = 1";
+    const data = (await queryDatabase(sql)) as any[];
+    let newData = data.map((item) => {
+      if (item.img_url) {
+        item.img_url = `/assets/Images/Menu/${item.category}/${item.goods_name}.png`;
+      }
+      if (item.category) {
+        item.category =
+          EnZnCategory[item.category as keyof typeof EnZnCategory];
+      }
+      return item;
+    });
+    res.status(200).json({
+      code: 200,
+      message: "获取随机商品成功",
+      data: newData,
+    });
+  } catch (error) {
+    console.error("数据库查询失败:", error);
+    throw error; // 抛出错误，让上层处理
+  }
+});
+
 //获取菜单
 app.get("/menu", async (req, res) => {
   try {
@@ -149,7 +175,7 @@ app.post("/car", async (req, res) => {
         code: 201,
         message: "你需要登陆才能添加商品",
       });
-      return
+      return;
     }
     const checkDataSql = `select * from  mcdonalds_user_purchase where goods_id = ? and user_email = ?`;
     const checkDataRes = (await queryDatabase(checkDataSql, [

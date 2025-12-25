@@ -94,7 +94,7 @@ const orderPay = async () => {
       <div class="left">
         <div class="one">
           <h1>The</h1>
-          <span>Hype</span>
+          <span>Car</span>
         </div>
         <h2>List</h2>
       </div>

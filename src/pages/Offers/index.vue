@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, nextTick } from "vue";
+import { useRouter } from "vue-router";
+const router = useRouter();
+//导入offersAPI
+import { getOffersAPI } from "@/API/Modules/offers";
+import { getImagePath } from "@/utils/Import";
 //导入Gsap
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 gsap.registerPlugin(ScrollTrigger);
-const OffersLi = ref<HTMLElement[]>([]);
 
 // 随机颜色
 const getRandomColor = () => {
@@ -17,14 +21,15 @@ const getRandomColor = () => {
 };
 
 // 动画区域
-const OffersMainAnimation = ref();
-onMounted(() => {
+const OffersMainAnimationRef = ref();
+const OffersLi = ref<HTMLElement[]>([]);
+const OffersMainAnimation=()=>{
   OffersLi.value.forEach(async (item, index) => {
     // 先隐藏所有元素
     gsap.set(item, { autoAlpha: 0, y: 100 });
     // 为每个元素创建独立的 ScrollTrigger
     await ScrollTrigger.create({
-      trigger: OffersMainAnimation.value,
+      trigger: OffersMainAnimationRef.value,
       once: true,
       onEnter: () => {
         // 当元素进入视口时，延时执行动画
@@ -38,41 +43,60 @@ onMounted(() => {
       },
     });
   });
+}
+
+const OffersData = ref<any[]>([]);
+onMounted(async () => {
+  const {
+    data: { data },
+  } = await getOffersAPI();
+  OffersData.value = data;
+  nextTick(()=>{
+    OffersMainAnimation()
+  })
 });
 </script>
 <template>
   <div class="Offers">
     <div class="header">
-      <div class="h1">Limited Time Access</div>
-      <div class="h2">Exclusive</div>
-      <div class="h3">Bundles</div>
+      <div class="h1">Which is Your Love</div>
+      <div class="h2">Choice</div>
+      <div class="h3">Something</div>
     </div>
-    <div class="main" ref="OffersMainAnimation">
+    <div class="main" ref="OffersMainAnimationRef">
       <ul>
         <li
-          v-for="(value, index) in 4"
+          v-for="(value, index) in OffersData"
           :key="index"
           :style="{ background: getRandomColor() }"
           :ref="(el)=>OffersLi.push(el as HTMLLIElement)"
         >
-          <div class="hide">Redeem Now</div>
+          <div class="hide" @click="router.push(`/buy/${value.goods_id}`)">
+            Redeem Now
+          </div>
           <div class="main">
-            <div class="header">
-              <div class="left">Valid Until 12/31</div>
-              <v-icon class="iconfont icon-erweima"></v-icon>
+            <div class="pic">
+              <img :src="getImagePath(value.img_url)" alt="" />
             </div>
-            <div class="main">
-              <div class="top">Midnight Run</div>
-              <div class="bottom">
-                2 Big Macs + 2 Medium Fries. Available 10PM - 4AM.
+
+            <div class="content" style="z-index: 100">
+              <div class="header">
+                <div class="left">Valid Until 12/31</div>
+                <v-icon class="iconfont icon-erweima"></v-icon>
               </div>
-            </div>
-            <div class="footer">
-              <div class="left">
-                <div class="top">Code</div>
-                <div class="bottom">MIDNIGHT24</div>
+              <div class="main">
+                <div class="top">{{ value.goods_name }}</div>
+                <div class="bottom">
+                  {{ value.goods_desc }}
+                </div>
               </div>
-              <div class="right">40% OFF</div>
+              <div class="footer">
+                <div class="left">
+                  <div class="top">Code</div>
+                  <div class="bottom">calorie:{{ value.calorie }}</div>
+                </div>
+                <div class="right">{{ value.category }}</div>
+              </div>
             </div>
           </div>
         </li>
@@ -135,7 +159,7 @@ onMounted(() => {
           height: 100%;
           background-color: #00000000;
           transition: all 0.3s ease;
-          z-index: 99;
+          z-index: 999;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -156,60 +180,79 @@ onMounted(() => {
           width: 100%;
           height: 100%;
           flex: 1;
-          & .header {
+          & .pic {
+            width: 100%;
+            z-index: 10;
+            height: 100%;
+            position: absolute;
+            overflow: hidden;
+            & img {
+              height: 100%;
+              position: absolute;
+              top: 40%;
+              right: -10px;
+              transform: translateY(-50%);
+            }
+          }
+          & .content {
             flex: 1;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            font-size: 24px;
-            & > .left {
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              line-height: 1;
-              padding: 3px 25px;
-              background-color: #290200;
-              border-radius: 10086px;
-            }
-          }
-          & > .main {
-            display: flex;
-            justify-content: flex-end;
             flex-direction: column;
-            flex: 3;
-            padding-bottom: 20px;
-            margin: 20px 20px 0 20px;
-            border-bottom: 1px solid #505050;
-            & .top {
-              font-size: 30px;
-              font-family: "微软雅黑";
-              font-weight: bolder;
-              letter-spacing: -2px;
+            & .header {
+              flex: 1;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 10px 20px;
+              font-size: 24px;
+              & > .left {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                line-height: 1;
+                padding: 3px 25px;
+                background-color: #290200;
+                border-radius: 10086px;
+              }
             }
-          }
-          & > .footer {
-            flex: 2;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px 10px 10px;
-            & .left {
-              line-height: 1.5;
+            & > .main {
+              display: flex;
+              justify-content: flex-end;
+              flex-direction: column;
+              flex: 3;
+              padding-bottom: 20px;
+              margin: 20px 20px 0 20px;
+              border-bottom: 1px solid #505050;
               & .top {
-                font-size: 20px;
+                font-size: 30px;
                 font-family: "微软雅黑";
                 font-weight: bolder;
-                color: #ada694;
                 letter-spacing: -2px;
               }
             }
-            & .right {
-              font-size: 30px;
-              font-family: "微软雅黑";
-              font-weight: bolder;
-              color: #fff;
-              letter-spacing: -2px;
+            & > .footer {
+              flex: 2;
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 0 10px 10px 10px;
+              & .left {
+                line-height: 1.5;
+                & .top {
+                  font-size: 20px;
+                  font-family: "微软雅黑";
+                  font-weight: bolder;
+                  color: #ada694;
+                  letter-spacing: -2px;
+                }
+              }
+              & .right {
+                font-size: 30px;
+                font-family: "微软雅黑";
+                font-weight: bolder;
+                color: #fff;
+                letter-spacing: -2px;
+              }
             }
           }
         }
