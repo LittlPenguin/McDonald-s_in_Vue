@@ -12,7 +12,6 @@ CREATE TABLE IF NOT EXISTS mcdonalds_goods (
     calorie INT UNSIGNED NOT NULL COMMENT '卡路里（大卡）',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-
     PRIMARY KEY (goods_id),
     INDEX idx_category (category),
     INDEX idx_product_name (goods_name)
