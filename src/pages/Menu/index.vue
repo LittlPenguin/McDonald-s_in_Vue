@@ -202,8 +202,8 @@ watch(
     & ul {
       width: 97%;
       display: flex;
-      justify-content: flex-start;
-      gap: 2.5vw;
+      justify-content: center;
+      gap: 2vw;
       flex-wrap: wrap;
       & li {
         margin: 20px 0;
@@ -266,4 +266,56 @@ watch(
     }
   }
 }
+
+@media screen and (max-width: 1200px) {
+  .Menu {
+    & .main {
+      & ul {
+        & li {
+          & .title {
+            font-size: 20px;
+          }
+          & .price {
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .Menu {
+    margin-top: 100px;
+    & .header {
+      height: 40vw;
+      & .bac {
+        font-size: 20vw;
+        line-height: 1;
+      }
+      & ul {
+        flex-wrap: wrap;
+        bottom: 10px;
+        & li {
+          min-width: 83px;
+          padding: 5px 20px;
+          margin: 10px 3px;
+          font-size: 20px;
+        }
+      }
+    }
+    & .main {
+      margin-top: 0px;
+      & ul {
+        gap: 4vw;
+        & li {
+          margin: 10px 0;
+          width: 42vw;
+          height: 60vw;
+        }
+      }
+    }
+  }
+}
+
 </style>

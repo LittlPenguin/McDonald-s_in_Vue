@@ -517,4 +517,98 @@ onMounted(() => {
     }
   }
 }
+
+@media screen and (max-width: 760px) {
+  .LayoutMain {
+    & .banner {
+      & .title {
+        font-size: 24vw;
+        & .left {
+          margin-right: 30px;
+        }
+      }
+      & .subtitle {
+        font-size: 28px;
+      }
+      & .goMenu {
+        & .goMenuBtn {
+          padding: 35px 30px;
+        }
+      }
+    }
+    & .introduce {
+      height: 70vw;
+      gap: 15px;
+      margin: 0;
+      & .card {
+        padding-bottom: 0;
+        & .subTitle {
+          font-size: 30px;
+        }
+      }
+    }
+    & .whatHot {
+      width: 95vw;
+      margin: 0 auto;
+      margin-top: 150px;
+      & .title {
+        & .left {
+          & .subTitle {
+            font-size: 60px;
+          }
+          & .subTitleT {
+            font-size: 70px;
+          }
+        }
+      }
+      & .main {
+        margin-top: 40px;
+        & ul {
+          justify-content: center;
+          & li {
+            margin: 10px 0;
+          }
+        }
+      }
+    }
+    & .AnimationText {
+      margin: 50px 0;
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .LayoutMain {
+    & .AnimationText {
+      margin: 30px 0;
+    }
+    & .introduce {
+      & .card {
+        padding-bottom: 0;
+        & .title {
+          font-size: 15px;
+        }
+        & .smallSubTitle {
+          display: none;
+        }
+      }
+    }
+    & .whatHot {
+      margin-top: 100px;
+      & .title {
+        & .left {
+          & .subTitle {
+            font-size: 45px;
+          }
+          & .subTitleT {
+            font-size: 50px;
+          }
+        }
+      }
+    }
+    & .AnimationText {
+      margin: 50px 0;
+    }
+  }
+}
 </style>

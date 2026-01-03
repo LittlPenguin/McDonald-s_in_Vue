@@ -78,6 +78,23 @@ const goHref = (href: SocialPlatform) => {
       font-size: 28px;
       z-index: 999;
       color: #364658;
+        text-align: center;
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .footer {
+    height: 350px;
+    .text {
+      ul {
+        & li {
+          font-size: 24px;
+        }
+      }
+      & span {
+        font-size: 20px;
+      }
     }
   }
 }

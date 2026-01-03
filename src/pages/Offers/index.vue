@@ -259,4 +259,92 @@ onMounted(async () => {
     }
   }
 }
+
+@media screen and (max-width: 1045px) {
+  .Offers {
+    & > .main {
+      & ul {
+        width: 90%;
+        & > li {
+          width: 40vw;
+          & > .main {
+            & .content {
+              & > .main {
+                padding-bottom: 0px;
+                & .top {
+                  font-size: 24px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 768px) {
+  .Offers {
+    & > .main {
+      & ul {
+        width: 90%;
+        & > li {
+          width: 80vw;
+          height: 330px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .Offers {
+    & > .header {
+      padding-left: 15px;
+
+      & .h2 {
+        font-size: 60px;
+      }
+      & .h3 {
+        font-size: 50px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 400px) {
+  .Offers {
+    & > .header {
+      padding-left: 5px;
+      & .h2 {
+        font-size: 50px;
+      }
+      & .h3 {
+        font-size: 40px;
+      }
+    }
+    & > .main {
+      & ul {
+        width: 95%;
+        & > li {
+          width:90vw;
+          & >.main{
+            & .pic{
+              height: 75%;
+            }
+            & .content{
+              & .header{
+                padding: 10px;
+                & .left{
+                  font-size: 20px;
+                }
+              }
+              & .main{
+                margin:60px 20px 0 5px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 </style>

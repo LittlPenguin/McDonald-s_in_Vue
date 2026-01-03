@@ -371,4 +371,29 @@ onMounted(() => {
     }
   }
 }
+
+@media screen and (max-width: 500px) {
+  .Login {
+    margin-top: 100px;
+    height: 70vh;
+    & .body {
+      padding: 20px;
+      height: 70vh;
+      width: 80vw;
+      & > .header {
+        & .top1 {
+          & .Gr {
+            width: 30px;
+          }
+          & span {
+            font-size: 20px;
+          }
+        }
+        & .des {
+          font-size: 21px;
+        }
+      }
+    }
+  }
+}
 </style>

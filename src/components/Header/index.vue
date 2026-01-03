@@ -66,48 +66,64 @@ const goClearLogin = () => {
         </li>
       </ul>
     </div>
-    <div
-      v-if="!accountStore.Email"
-      class="HeaderCom_right"
-      @click="router.push('/login')"
-    >
-      <span style="padding: 0 10px" class="HeaderCom_ right_span"
-        >My Account</span
+    <div style="display: flex; justify-content: center; align-items: center">
+      <div
+        v-if="!accountStore.Email"
+        class="HeaderCom_right"
+        @click="router.push('/login')"
       >
-      <v-icon
-        class="iconfont icon-renwu-ren headerShopping"
-        size="large"
-      ></v-icon>
-    </div>
-    <div
-      v-if="accountStore.Email"
-      class="HeaderCom_right"
-      @click="router.push('/car')"
-    >
-      <v-menu open-on-hover>
-        <template v-slot:activator="{ props }">
-          <div color="primary" v-bind="props">
-            <span style="padding: 0 10px" class="HeaderCom_ right_span"
-              >My Order</span
-            >
-            <v-icon
-              class="iconfont icon-renwu-ren headerShopping"
-              size="large"
-            ></v-icon>
-          </div>
-        </template>
-        <div
-          style="
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            cursor: pointer;
-          "
-          @click="goClearLogin"
+        <span style="padding: 0 10px" class="HeaderCom_ right_span"
+          >My Account</span
         >
-          退出账户?
-        </div>
-      </v-menu>
+        <v-icon
+          class="iconfont icon-renwu-ren headerShopping"
+          size="large"
+        ></v-icon>
+      </div>
+      <div
+        v-if="accountStore.Email"
+        class="HeaderCom_right"
+        @click="router.push('/car')"
+      >
+        <v-menu open-on-hover>
+          <template v-slot:activator="{ props }">
+            <div color="primary" v-bind="props">
+              <span style="padding: 0 10px" class="HeaderCom_ right_span"
+                >My Order</span
+              >
+              <v-icon
+                class="iconfont icon-renwu-ren headerShopping"
+                size="large"
+              ></v-icon>
+            </div>
+          </template>
+          <div
+            style="
+              display: flex;
+              justify-content: flex-end;
+              align-items: center;
+              cursor: pointer;
+            "
+            @click="goClearLogin"
+          >
+            退出账户?
+          </div>
+        </v-menu>
+      </div>
+      <div class="headerMenu">
+        <v-menu open-on-hover>
+          <template v-slot:activator="{ props }">
+            <div color="primary" v-bind="props">
+              <v-icon class="iconfont icon-menu" size="large"></v-icon>
+            </div>
+          </template>
+          <ul>
+            <li style="cursor:pointer;" @click="router.push('/menu')">Menu</li>
+            <li style="cursor:pointer;" @click="router.push('/offers')">Offers</li>
+            <li style="cursor:pointer;" @click="router.push('/car')">OrderCar</li>
+          </ul>
+        </v-menu>
+      </div>
     </div>
   </div>
 </template>
@@ -230,6 +246,32 @@ const goClearLogin = () => {
     }
     &:hover .HeaderCom_right_span {
       color: #ffc000;
+    }
+  }
+  & .headerMenu {
+    cursor: pointer;
+    display: none;
+  }
+}
+
+@media screen and (max-width: 760px) {
+  .HeaderCom {
+    padding: 10px 30px;
+    & .headerMenu {
+      margin-left: 5px;
+      display: flex !important;
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .HeaderCom {
+    padding: 10px 20px;
+    & .HeaderCom_left {
+      font-size: 16px;
+    }
+    & .HeaderCom_right {
+      font-size: 16px;
     }
   }
 }

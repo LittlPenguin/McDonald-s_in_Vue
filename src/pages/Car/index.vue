@@ -451,4 +451,189 @@ const orderPay = async () => {
     }
   }
 }
+
+@media screen and (max-width: 1200px) {
+  .Trending {
+    & > .main {
+      min-height: 60vh;
+      & ul {
+        & li {
+          // flex: 5;
+          min-height: 400px;
+          & > .right {
+            & .footer {
+              & .detail {
+                font-size: 10px;
+                padding: 5px;
+              }
+            }
+          }
+        }
+      }
+      & .order {
+        margin-right: 70px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .Trending {
+    & > .main {
+      min-height: 60vh;
+      & ul {
+        & li {
+          // flex: 5;
+          min-height: 400px;
+          & .middle {
+            height: 60%;
+          }
+          & > .right {
+            & .footer {
+              & .detail {
+                font-size: 10px;
+                padding: 5px;
+              }
+            }
+          }
+        }
+      }
+      & .order {
+        margin-right: 10px;
+        & .checkout {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}
+@media screen and (max-width: 760px) {
+  .Trending {
+    & > .header {
+      font-size: 20px;
+      & .left {
+        & .one {
+          & h1,
+          span {
+            font-size: 44px;
+          }
+        }
+        & h2 {
+          font-size: 62px;
+          padding-left: 0px;
+        }
+      }
+      & .right {
+        padding-bottom: 0px;
+        width: 130px;
+        font-size: 20px;
+      }
+    }
+    & > .main {
+      flex-direction: column;
+      align-items: flex-end;
+      & ul {
+        width: 100%;
+        & li {
+          & > .left {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-width: 100px;
+          }
+        }
+      }
+      & .order {
+        margin: 0px 30px 20px 0;
+        width: 207px;
+        flex: none;
+        height: 250px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .Trending {
+    & > .header {
+      font-size: 16px;
+      padding: 0 10px;
+      & .left {
+        & .one {
+          & h1,
+          span {
+            font-size: 32px;
+          }
+        }
+        & h2 {
+          font-size: 42px;
+          padding-left: 0px;
+        }
+      }
+      & .right {
+        font-size: 16px;
+      }
+    }
+    & > .main {
+      flex-direction: column;
+      align-items: flex-end;
+      & ul {
+        width: 100%;
+        margin: 20px 0;
+        & li {
+          height: auto;
+          padding: 20px 0;
+          margin: 0;
+          flex-direction: column;
+          & > .left {
+            padding-left: 10px;
+            width: 100%;
+            flex: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 60px;
+            height: 50px;
+          }
+          & > .middle {
+            flex: none;
+            height: 300px;
+            width: 300px;
+            margin: 10px 0;
+          }
+          & > .right {
+            padding-left: 10px;
+            flex: none;
+            width: 100%;
+            & .header {
+              justify-content: space-between;
+            }
+            & > .footer{
+              flex-direction: column;
+              align-items:flex-start;
+              justify-content: center;
+              & .pric{
+                font-size:5.5vw;
+              }
+              & .detail{
+                font-size:5px;
+              }
+            }
+          }
+          & .change{
+            right: 10px;
+            bottom: 20px;
+            transform: translate(0);
+          }
+        }
+      }
+      & .order {
+        margin: 0px 30px 20px 0;
+        width: 207px;
+        flex: none;
+        margin: 0 auto;
+      }
+    }
+  }
+}
 </style>

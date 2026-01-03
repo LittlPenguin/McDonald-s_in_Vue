@@ -216,4 +216,74 @@ onMounted(async () => {
   padding: 10px;
   font-size: 2px;
 }
+
+@media screen and (max-width: 760px) {
+  .Buy {
+    margin-top: 130px;
+    height: 60vw;
+    gap: 40px;
+    & .left {
+      width: 40%;
+    }
+    & .right {
+      width: 50%;
+      & .header {
+        font-size: 16px;
+      }
+      & .goodsCate {
+        font-size: 16px;
+      }
+      & .goodsName {
+        font-size: 40px;
+      }
+      & .goodsDes {
+        font-size: 20px;
+      }
+      & .goodsPri {
+        font-size: 16px;
+      }
+      & .add {
+        font-size: 18px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 520px) {
+  .Buy {
+    height: 85vh;
+    display: flex;
+    flex-direction: column;
+    margin-top: 130px;
+    gap: 0px;
+    & .left {
+      overflow: hidden;
+      width: 90%;
+    }
+    & > .right {
+      margin-top: 20px;
+    }
+    & .right {
+      width: 90%;
+      & .header {
+        font-size: 16px;
+      }
+      & .goodsCate {
+        font-size: 16px;
+      }
+      & .goodsName {
+        font-size: 40px;
+      }
+      & .goodsDes {
+        font-size: 20px;
+      }
+      & .goodsPri {
+        font-size: 16px;
+      }
+      & .add {
+        font-size: 18px;
+      }
+    }
+  }
+}
 </style>
